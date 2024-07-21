@@ -10,7 +10,7 @@ DiffDriveArduino::DiffDriveArduino()
 {}
 
 
-CallbackReturn DiffDriveArduino::on_init(const hardware_interface::HardwareInfo & info)
+hardware_interface::CallbackReturn DiffDriveArduino::on_init(const hardware_interface::HardwareInfo & info)
 {
   if (hardware_interface::SystemInterface::on_init(info) != CallbackReturn::SUCCESS)
   {
@@ -68,7 +68,7 @@ std::vector<hardware_interface::CommandInterface> DiffDriveArduino::export_comma
 }
 
 
-CallbackReturn DiffDriveArduino::on_activate(const rclcpp_lifecycle::State & /*previous_state*/)
+hardware_interface::CallbackReturn DiffDriveArduino::on_activate(const rclcpp_lifecycle::State & /*previous_state*/)
 {
   RCLCPP_INFO(logger_, "Starting Controller...");
 
@@ -80,14 +80,15 @@ CallbackReturn DiffDriveArduino::on_activate(const rclcpp_lifecycle::State & /*p
   return CallbackReturn::SUCCESS;
 }
 
-CallbackReturn DiffDriveArduino::on_deactivate(const rclcpp_lifecycle::State & /*previous_state*/)
+hardware_interface::CallbackReturn DiffDriveArduino::on_deactivate(const rclcpp_lifecycle::State & /*previous_state*/)
 {
   RCLCPP_INFO(logger_, "Stopping Controller...");
 
   return CallbackReturn::SUCCESS;
 }
 
-hardware_interface::return_type DiffDriveArduino::read()
+hardware_interface::return_type DiffDriveArduino::read(
+  const rclcpp::Time & /*time*/, const rclcpp::Duration & /*period*/)
 {
 
   // TODO fix chrono duration
@@ -121,7 +122,8 @@ hardware_interface::return_type DiffDriveArduino::read()
   
 }
 
-hardware_interface::return_type DiffDriveArduino::write()
+hardware_interface::return_type DiffDriveArduino::write(
+  const rclcpp::Time & /*time*/, const rclcpp::Duration & /*period*/)
 {
 
   if (!arduino_.connected())

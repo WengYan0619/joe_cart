@@ -32,10 +32,11 @@ public:
 
   CallbackReturn on_deactivate(const rclcpp_lifecycle::State & previous_state) override;
 
-  return_type read() override;
+  hardware_interface::return_type read(
+    const rclcpp::Time & time, const rclcpp::Duration & period) override;
 
-  return_type write() override;
-
+  hardware_interface::return_type write(
+    const rclcpp::Time & time, const rclcpp::Duration & period) override;
 
 
 private:
@@ -50,6 +51,5 @@ private:
   std::chrono::time_point<std::chrono::system_clock> time_;
   
 };
-
 
 #endif // DIFFDRIVE_ARDUINO_FAKE_ROBOT_H
