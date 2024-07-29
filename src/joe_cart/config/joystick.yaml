@@ -24,4 +24,8 @@ teleop_node:
     enable_button: 8
     enable_turbo_button: 9
 
+<<<<<<< HEAD
     require_enable_button: true
+=======
+    require_enable_button: false
+>>>>>>> 799a98a5874a9546a8ebed40f08792efeb4fe0d8

@@ -32,9 +32,9 @@ SetPointInfo;
 
 SetPointInfo leftPID, rightPID;
 
-  /* PID Parameters */
-int Kp = 30;
-int Kd = 10;
+/* PID Parameters */
+int Kp = 14;
+int Kd = 0;
 int Ki = 0;
 int Ko = 100;
 
@@ -74,6 +74,23 @@ void doPID(SetPointInfo * p) {
   input = p->Encoder - p->PrevEnc;
   Perror = p->TargetTicksPerFrame - input;
 
+  Serial.print("Input:");
+  Serial.print(input);
+  Serial.print(" TargetTicks: ");
+  Serial.print(p->TargetTicksPerFrame);
+  Serial.print(" Perror: ");
+  Serial.print(Perror);
+  Serial.print(" Kp: ");
+  Serial.print(Perror);
+  Serial.print(" Kd: ");
+  Serial.print(Perror);
+  Serial.print(" Ki: ");
+  Serial.print(Ki);
+  Serial.print(" PrevInput: ");
+  Serial.print(p->PrevInput);
+  Serial.print(" ITerm: ");
+  Serial.print(p->ITerm);
+
 
   /*
   * Avoid derivative kick and allow tuning changes,
@@ -82,12 +99,20 @@ void doPID(SetPointInfo * p) {
   */
   //output = (Kp * Perror + Kd * (Perror - p->PrevErr) + Ki * p->Ierror) / Ko;
   // p->PrevErr = Perror;
-  output = (Kp * Perror - Kd * (input - p->PrevInput) + p->ITerm) / Ko;
+  long output_temp = (Kp * Perror - Kd * (input - p->PrevInput) + p->ITerm);
+
+  Serial.print(" Output NO KO: ");
+  Serial.print(output_temp);
+
+  output = output_temp / Ko;
   p->PrevEnc = p->Encoder;
 
   output += p->output;
   // Accumulate Integral error *or* Limit output.
   // Stop accumulating when output saturates
+  Serial.print(" Uncapped output:");
+  Serial.println(output);
+
   if (output >= MAX_PWM)
     output = MAX_PWM;
   else if (output <= -MAX_PWM)
@@ -100,6 +125,8 @@ void doPID(SetPointInfo * p) {
 
   p->output = output;
   p->PrevInput = input;
+
+  
 }
 
 /* Read the encoder values and call the PID routine */
@@ -124,14 +151,11 @@ void updatePID() {
   doPID(&rightPID);
   doPID(&leftPID);
 
-  /* Set the motor speeds accordingly */
- 
-//  Serial.print("Left motor speed: ");
   Serial.print(leftPID.output);
   Serial.print(",");
-//  Serial.print(" Right motor speed: ");
   Serial.println(rightPID.output);
 
-  
-  setMotorSpeeds(-1*leftPID.output, rightPID.output);
+  /* Set the motor speeds accordingly */
+  setMotorSpeeds(leftPID.output, rightPID.output);
 }
+
