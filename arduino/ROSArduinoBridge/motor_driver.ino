@@ -52,17 +52,8 @@
 
   // A convenience function for setting both motor speeds
   void setMotorSpeeds(int leftSpeed, int rightSpeed) {
-    digitalWrite(RIGHT_MOTOR_ENABLE, HIGH);
-    digitalWrite(LEFT_MOTOR_ENABLE, HIGH);
     setMotorSpeed(LEFT, leftSpeed);
-    setMotorSpeed(RIGHT, rightSpeed)
-  }
-
-  void setPWMtest(int leftSpeed, int rightSpeed) {
-    digitalWrite(RIGHT_MOTOR_ENABLE, HIGH);
-    digitalWrite(LEFT_MOTOR_ENABLE, HIGH);
-    analogWrite(9, leftSpeed);
-    analogWrite(6, rightSpeed);
+    setMotorSpeed(RIGHT, rightSpeed);
   }
 #elif defined L298_MOTOR_DRIVER
   void initMotorController() {
@@ -71,11 +62,10 @@
     pinMode(5, OUTPUT);
     pinMode(6, OUTPUT);
     pinMode(9, OUTPUT);
-    pinMode(10, OUTPUT);
-    
+    pinMode(10,OUTPUT);
+
     digitalWrite(RIGHT_MOTOR_ENABLE, HIGH);
     digitalWrite(LEFT_MOTOR_ENABLE, HIGH);
-//    Serial.println("Motor Initialized L298");
   }
   
   void setMotorSpeed(int i, int spd) {
@@ -102,14 +92,6 @@
   void setMotorSpeeds(int leftSpeed, int rightSpeed) {
     setMotorSpeed(LEFT, leftSpeed);
     setMotorSpeed(RIGHT, rightSpeed);
-  }
-
-  void setPWMtest(int leftSpeed, int rightSpeed) {
-    digitalWrite(RIGHT_MOTOR_ENABLE, HIGH);
-    digitalWrite(LEFT_MOTOR_ENABLE, HIGH);
-    analogWrite(9, leftSpeed);
-    analogWrite(6, rightSpeed);
-    Serial.println("Using Test PWM fnc");
   }
 #else
   #error A motor driver must be selected!

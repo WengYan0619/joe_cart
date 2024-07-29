@@ -114,7 +114,7 @@
 
   /* Stop the robot if it hasn't received a movement command
    in this number of milliseconds */
-  #define AUTO_STOP_INTERVAL 50000000
+  #define AUTO_STOP_INTERVAL 100000
   long lastMotorCommand = AUTO_STOP_INTERVAL;
 #endif
 
@@ -294,7 +294,6 @@ void setup() {
 */
 void loop() {
   while (Serial.available() > 0) {
-
     
     // Read the next character
     chr = Serial.read();
@@ -356,3 +355,4 @@ void loop() {
   }
 #endif
 }
+
