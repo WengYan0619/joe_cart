@@ -27,7 +27,7 @@ hardware_interface::CallbackReturn DiffDriveArduino::on_init(const hardware_inte
   cfg_.device = info_.hardware_parameters["device"];
   cfg_.baud_rate = std::stoi(info_.hardware_parameters["baud_rate"]);
   cfg_.timeout = std::stoi(info_.hardware_parameters["timeout"]);
-  cfg_.enc_counts_per_rev = std::stoi(info_.hardware_parameters["enc_counts_per_rev"]);
+  cfg_.enc_counts_per_rev = std::stoi("830");
 
   // Set up the wheels
   l_wheel_.setup(cfg_.left_wheel_name, cfg_.enc_counts_per_rev);
@@ -75,7 +75,7 @@ hardware_interface::CallbackReturn DiffDriveArduino::on_activate(const rclcpp_li
   arduino_.sendEmptyMsg();
   // arduino.setPidValues(9,7,0,100);
   // arduino.setPidValues(14,7,0,100);
-  arduino_.setPidValues(14, 0, 0, 100);
+  // arduino_.setPidValues(14, 0, 0, 100);
 
   return CallbackReturn::SUCCESS;
 }
