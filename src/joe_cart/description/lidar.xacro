@@ -4,14 +4,14 @@
     <joint name="laser_joint" type="fixed">
         <parent link="chassis"/>
         <child link="laser_frame"/>
-        <origin xyz="0.1 0 0.175" rpy="0 0 0"/>
+        <origin xyz="0.1 0 0.4" rpy="0 0 0"/>
     </joint>
 
     <link name="laser_frame">
         <visual>
             <origin xyz="0 0 0"/>
             <geometry>
-                <cylinder length="0.1" radius="0.05"/>
+                <cylinder length="0.08" radius="0.05"/>
             </geometry>
             <material name="red"/>
         </visual>
