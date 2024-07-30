@@ -13,6 +13,8 @@ struct Config
   int baud_rate = 57600;
   int timeout = 1000;
   int enc_counts_per_rev = 1920;
+  int enc_counts_per_rev_left_motor = 830;
+  int enc_counts_per_rev_right_motor = 830;
 };
 
 
