@@ -72,7 +72,7 @@ hardware_interface::CallbackReturn DiffDriveArduino::on_activate(const rclcpp_li
 {
   RCLCPP_INFO(logger_, "Starting Controller...");
 
-  arduino_.sendEmptyMsg();
+  // arduino_.sendEmptyMsg();
   // arduino.setPidValues(9,7,0,100);
   // arduino.setPidValues(14,7,0,100);
   // arduino_.setPidValues(14, 0, 0, 100);
