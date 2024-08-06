@@ -34,8 +34,8 @@
             <param name="baud_rate">57600</param>
             <param name="timeout">1000</param>
             <param name="enc_counts_per_rev">830</param>
-            <param name="enc_cpr_left_motor">830</param>
-            <param name="enc_cpr_right_motor">830</param>
+            <param name="enc_cpr_left_motor">825</param>
+            <param name="enc_cpr_right_motor">825</param>
         </hardware>
         <joint name="left_wheel_joint">
             <command_interface name="velocity">
