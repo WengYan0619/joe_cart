@@ -13,7 +13,7 @@ Parameter Description:
     1.1. enable angle crop,  example: {'enable_angle_crop_func': True}
     1.2. disable angle crop, example: {'enable_angle_crop_func': False}
   2. Angle cropping interval setting:
-  - The distance and intensity data within the set angle range will be set to 0.
+  - The distance and intensity data within the set /home/yan/dev_ws/new_map.yamlangle range will be set to 0.
   - angle >= 'angle_crop_min' and angle <= 'angle_crop_max' which is [angle_crop_min, angle_crop_max], unit is degress.
     example:
       {'angle_crop_min': 135.0}
@@ -32,10 +32,10 @@ def generate_launch_description():
         {'product_name': 'LDLiDAR_LD06'},
         {'topic_name': 'scan'},
         {'frame_id': 'base_laser'},
-        {'port_name': '/dev/ttyUSB2'},
+        {'port_name': '/dev/ttyACM1'},
         {'port_baudrate': 230400},
         {'laser_scan_dir': True},
-        {'enable_angle_crop_func': False},
+        {'enable_angle_crop_func': True},
         {'angle_crop_min': 135.0},
         {'angle_crop_max': 225.0}
       ]

@@ -93,6 +93,12 @@ def generate_launch_description():
             parameters=[joy_params, {'use_sim_time': False}],
             remappings=[('/cmd_vel','/cmd_vel_joy')]
          )
+    
+    lidar = IncludeLaunchDescription(
+                PythonLaunchDescriptionSource([os.path.join(
+                    get_package_share_directory(package_name),'launch','ld06.launch.py'
+                )]), 
+    )
 
     # Launch them all!
     return LaunchDescription([
@@ -102,5 +108,6 @@ def generate_launch_description():
         delayed_joint_broad_spawner,
         twist_mux,
         joy_node,
-        teleop_node
+        teleop_node,
+        lidar
     ])
