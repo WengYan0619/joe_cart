@@ -23,8 +23,8 @@ class SenderNode(Node):
         self.bridge = CvBridge()
         
         # Declare and get parameters
-        self.declare_parameter('yolo_model', 'yolov8n.pt')
-        self.declare_parameter('server_ip', '0.0.0.0')
+        self.declare_parameter('yolo_model', '/home/vania/joe_cart/src/fruit_recognition/fruit_recognition/best.pt')
+        self.declare_parameter('server_ip', '0.0.0.0')  # Listen on all interfaces
         self.declare_parameter('server_port', 5000)
         self.declare_parameter('target_fps', 10)
         self.declare_parameter('max_queue_size', 30)
@@ -33,6 +33,7 @@ class SenderNode(Node):
         self.declare_parameter('yolo_input_size', [640, 640])
         self.declare_parameter('confidence_threshold', 0.7)
         self.declare_parameter('nms_threshold', 0.45)
+        self.declare_parameter('specified_classes', ['Orange'])  
 
         self.model = YOLO(self.get_parameter('yolo_model').value)
         self.server_ip = self.get_parameter('server_ip').value
@@ -44,11 +45,11 @@ class SenderNode(Node):
         self.yolo_input_size = tuple(self.get_parameter('yolo_input_size').value)
         self.confidence_threshold = self.get_parameter('confidence_threshold').value
         self.nms_threshold = self.get_parameter('nms_threshold').value
+        self.specified_classes = self.get_parameter('specified_classes').value
 
         # Socket setup
         self.server_socket = self.start_server(self.server_ip, self.server_port)
         self.client_socket = None
-        self.is_connected = False
 
         # Frame and result queues
         self.frame_queue = queue.Queue()
@@ -83,11 +84,9 @@ class SenderNode(Node):
     def run(self):
         while rclpy.ok():
             self.get_logger().info("Waiting for client connection...")
+            self.client_socket, addr = self.server_socket.accept()
+            self.get_logger().info(f"Connected to client: {addr}")
             try:
-                self.client_socket, addr = self.server_socket.accept()
-                self.client_socket.settimeout(5.0)  # Set a timeout for operations
-                self.is_connected = True
-                self.get_logger().info(f"Connected to client: {addr}")
                 self.handle_client()
             except Exception as e:
                 self.get_logger().error(f"Error handling client: {str(e)}")
@@ -95,14 +94,14 @@ class SenderNode(Node):
                 if self.client_socket:
                     self.client_socket.close()
                     self.client_socket = None
-                self.is_connected = False
 
     def handle_client(self):
         try:
-            while rclpy.ok() and self.is_connected:
+            while rclpy.ok():
                 frame = self.receive_frame()
                 if frame is None:
-                    raise ConnectionError("Client disconnected")
+                    self.get_logger().info("Client disconnected")
+                    break
                 
                 # Adaptive queue management
                 current_queue_size = self.frame_queue.qsize()
@@ -129,33 +128,20 @@ class SenderNode(Node):
         
         except Exception as e:
             self.get_logger().error(f"Error handling client: {str(e)}")
-            self.is_connected = False
 
     def receive_frame(self):
         try:
-            msg_size = self.recvall(struct.calcsize("L"))
-            if not msg_size:
-                return None
-            msg_size = struct.unpack("L", msg_size)[0]
-            data = self.recvall(msg_size)
-            if not data:
-                return None
-            frame_data = np.frombuffer(data, dtype=np.uint8)
-            frame = cv2.imdecode(frame_data, cv2.IMREAD_COLOR)
+            msg_size = struct.unpack("L", self.client_socket.recv(struct.calcsize("L")))[0]
+            data = b""
+            while len(data) < msg_size:
+                packet = self.client_socket.recv(min(msg_size - len(data), 4096))
+                if not packet:
+                    return None
+                data += packet
+            frame = pickle.loads(data)
             return frame
-        except socket.error as e:
-            self.get_logger().error(f"Error receiving frame: {str(e)}")
-            self.is_connected = False
+        except (struct.error, pickle.UnpicklingError, EOFError):
             return None
-
-    def recvall(self, n):
-        data = bytearray()
-        while len(data) < n:
-            packet = self.client_socket.recv(n - len(data))
-            if not packet:
-                return None
-            data.extend(packet)
-        return data
 
     def process_frames(self):
         last_process_time = time.time()
@@ -189,7 +175,7 @@ class SenderNode(Node):
                 time.sleep(0.001)
 
     def process_with_yolo(self, frame):
-        results = self.model(frame, conf=self.confidence_threshold, iou=self.nms_threshold)
+        results = self.model(frame)
         return results
 
     def print_detections(self, results):
@@ -202,10 +188,7 @@ class SenderNode(Node):
 
     def send_results(self):
         while rclpy.ok():
-            if not self.is_connected or not self.client_socket:
-                time.sleep(0.1)
-                continue
-            if not self.result_queue.empty():
+            if not self.result_queue.empty() and self.client_socket:
                 result = self.result_queue.get()
                 detections = []
                 for r in result:
@@ -213,14 +196,14 @@ class SenderNode(Node):
                     for box in boxes:
                         cls = int(box.cls[0])
                         conf = float(box.conf[0])
-                        if conf >= self.confidence_threshold:
-                            x1, y1, x2, y2 = box.xyxy[0].tolist()
-                            detections.append({
-                                'class': self.model.names[cls],
-                                'confidence': conf,
-                                'bbox': [x1, y1, x2, y2]
-                            })
+                        x1, y1, x2, y2 = box.xyxy[0].tolist()
+                        detections.append({
+                            'class': self.model.names[cls],
+                            'confidence': conf,
+                            'bbox': [x1, y1, x2, y2]
+                        })
                 
+                # Send detections to client over socket
                 try:
                     detection_data = json.dumps(detections).encode('utf-8')
                     msg_size = struct.pack("L", len(detection_data))
@@ -228,7 +211,6 @@ class SenderNode(Node):
                     self.get_logger().info(f"Sent detection results to client")
                 except Exception as e:
                     self.get_logger().error(f"Error sending detection results: {str(e)}")
-                    self.is_connected = False
 
                 # Publish detections to ROS topic (keep this for local use)
                 detection_msg = String()
