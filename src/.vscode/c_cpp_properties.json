@@ -1,0 +1,24 @@
+{
+  "configurations": [
+    {
+      "browse": {
+        "databaseFilename": "${default}",
+        "limitSymbolsToIncludedHeaders": false
+      },
+      "includePath": [
+        "/home/vania/joe_cart/install/serial/include/**",
+        "/opt/ros/humble/include/**",
+        "/home/vania/joe_cart/src/diffdrive_arduino/include/**",
+        "/home/vania/joe_cart/src/ldlidar_stl_ros2/include/**",
+        "/home/vania/joe_cart/src/serial/include/**",
+        "/usr/include/**"
+      ],
+      "name": "ROS",
+      "intelliSenseMode": "gcc-x64",
+      "compilerPath": "/usr/bin/gcc",
+      "cStandard": "gnu11",
+      "cppStandard": "c++14"
+    }
+  ],
+  "version": 4
+}
