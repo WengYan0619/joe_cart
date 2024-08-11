@@ -33,9 +33,9 @@ SetPointInfo;
 SetPointInfo leftPID, rightPID;
 
 /* PID Parameters */
-int Kp = 14;
-int Kd = 0;
-int Ki = 0;
+int Kp = 18;
+int Kd = 6;
+int Ki = 4;
 int Ko = 100;
 
 unsigned char moving = 0; // is the base in motion?
@@ -74,22 +74,22 @@ void doPID(SetPointInfo * p) {
   input = p->Encoder - p->PrevEnc;
   Perror = p->TargetTicksPerFrame - input;
 
-  // Serial.print("Input:");
-  // Serial.print(input);
-  // Serial.print(" TargetTicks: ");
-  // Serial.print(p->TargetTicksPerFrame);
-  // Serial.print(" Perror: ");
-  // Serial.print(Perror);
-  // Serial.print(" Kp: ");
-  // Serial.print(Kp);
-  // Serial.print(" Kd: ");
-  // Serial.print(Kd);
-  // Serial.print(" Ki: ");
-  // Serial.print(Ki);
-  // Serial.print(" PrevInput: ");
-  // Serial.print(p->PrevInput);
-  // Serial.print(" ITerm: ");
-  // Serial.print(p->ITerm);
+  Serial.print("Input:");
+  Serial.print(input);
+  Serial.print(" TargetTicks: ");
+  Serial.print(p->TargetTicksPerFrame);
+  Serial.print(" Perror: ");
+  Serial.print(Perror);
+  Serial.print(" Kp: ");
+  Serial.print(Kp);
+  Serial.print(" Kd: ");
+  Serial.print(Kd);
+  Serial.print(" Ki: ");
+  Serial.print(Ki);
+  Serial.print(" PrevInput: ");
+  Serial.print(p->PrevInput);
+  Serial.print(" ITerm: ");
+  Serial.print(p->ITerm);
 
 
   /*
@@ -101,21 +101,21 @@ void doPID(SetPointInfo * p) {
   // p->PrevErr = Perror;
   long output_temp = (Kp * Perror - Kd * (input - p->PrevInput) + p->ITerm);
 
-  // Serial.print(output_temp);
-  // Serial.print(" Output NO KO: ");
+  Serial.print(output_temp);
+  Serial.print(" Output NO KO: ");
 
   output = output_temp / Ko;
   p->PrevEnc = p->Encoder;
   
-  // Serial.print(" Not added with prev output:");
-  // Serial.print(output);
+  Serial.print(" Not added with prev output:");
+  Serial.print(output);
 
   output += p->output;
   // Accumulate Integral error *or* Limit output.
   // Stop accumulating when output saturates
 
-  // Serial.print(" Added with prev output:");
-  // Serial.println(output);
+  Serial.print(" Added with prev output:");
+  Serial.println(output);
 
   if (output >= MAX_PWM)
     output = MAX_PWM;
@@ -158,9 +158,9 @@ void updatePID() {
   // Serial.println(rightPID.TargetTicksPerFrame);
 
 
-  // Serial.print(leftPID.output);
-  // Serial.print(",");
-  // Serial.println(rightPID.output);
+  Serial.print(leftPID.output);
+  Serial.print(",");
+  Serial.println(rightPID.output);
 
   /* Set the motor speeds accordingly */
   setMotorSpeeds(leftPID.output, rightPID.output);
