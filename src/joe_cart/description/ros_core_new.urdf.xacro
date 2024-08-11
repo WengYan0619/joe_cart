@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="robot_new">
+
+  <!-- Define materials -->
+  <xacro:property name="body_color" value="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+
+  <!-- Define common properties -->
+  <xacro:property name="wheel_radius" value="0.0285" />
+  <xacro:property name="wheel_separation" value="0.44" />
+
+  <!-- Base Link -->
+  <link name="base_link">
+    <inertial>
+      <origin xyz="-0.0124711888668452 4.68604114422927E-05 0.269752234729229" rpy="0 0 0" />
+      <mass value="7.40564073717936" />
+      <inertia ixx="0.0840963831782375" ixy="1.14103457957399E-07" ixz="-6.77908469162018E-07"
+               iyy="0.0690566081420881" iyz="5.11060740929003E-08" izz="0.114286230084613" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://robot_new/meshes/base_link.STL" />
+      </geometry>
+      <material name="">
+        <color rgba="${body_color}" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://robot_new/meshes/base_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+  <!-- Wheel Macro -->
+  <xacro:macro name="wheel" params="prefix reflect">
+    <link name="${prefix}_wheel">
+      <inertial>
+        <origin xyz="${reflect * 4.1702E-10} ${reflect * 0.003762} -1.1536E-09" rpy="0 0 0" />
+        <mass value="0.028216" />
+        <inertia ixx="1.1938E-05" ixy="${-reflect * 8.1598E-14}" ixz="${reflect * 8.2976E-15}"
+                 iyy="2.2184E-05" iyz="${reflect * 3.2808E-13}" izz="1.1939E-05" />
+      </inertial>
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://robot_new/meshes/${prefix}_wheel.STL" />
+        </geometry>
+        <material name="">
+          <color rgba="${body_color}" />
+        </material>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://robot_new/meshes/${prefix}_wheel.STL" />
+        </geometry>
+      </collision>
+    </link>
+
+    <joint name="${prefix}_wheel_joint" type="continuous">
+      <origin xyz="0.1615 ${reflect * wheel_separation/2} ${-wheel_radius}" rpy="0 0 0" />
+      <parent link="base_link" />
+      <child link="${prefix}_wheel" />
+      <axis xyz="0 1 0" />
+    </joint>
+  </xacro:macro>
+
+  <!-- Use the wheel macro -->
+  <xacro:wheel prefix="right" reflect="-1" />
+  <xacro:wheel prefix="left" reflect="1" />
+
+</robot>
