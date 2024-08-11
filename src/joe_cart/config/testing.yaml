@@ -1,12 +1,12 @@
 map_server:
   ros__parameters:
     yaml_filename: "../../../../Actual_map.yaml"
-    use_sim_time: false
+    use_sim_time: True
     topic_name: "map"
     frame_id: "map"
 amcl:
   ros__parameters:
-    use_sim_time: false
+    use_sim_time: True
     set_initial_pose: true
     initial_pose_x: 0
     initial_pose_y: 0
