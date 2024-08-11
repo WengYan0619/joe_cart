@@ -36,7 +36,7 @@ class LabNavigator(Node):
         #So here is where the flutter server will send the aisle name/number to the robot
         aisle_name = "SuperMarket"  # For now, hardcoded; you will replace this with actual data
 
-        # Define waypoints based on lab names
+        # Define waypoints based on aisle names
         waypoints = {
             "Diary": (4.10, 1.89),
             "Snacks": (-3.06, 1.96),

@@ -9,14 +9,16 @@ class RFIDReader(Node):
         super().__init__('rfid_reader')
         self.publisher_ = self.create_publisher(String, 'rfid_data', 10)
         try:
-            self.serial_port = serial.Serial('/dev/ttyACM1', 9600, timeout=2)
+            self.serial_port = serial.Serial('/dev/ttyUSB0', 9600, timeout=2)
         except serial.SerialException:
             self.get_logger().error("Serial port not available")
             sys.exit(1)
         self.timer = self.create_timer(0.1, self.timer_callback)
+        self.get_logger().info("Serial Opem Succesfully")
 
     def timer_callback(self):
         if self.serial_port.in_waiting > 0:
+            
             line = self.serial_port.readline().decode('utf-8').strip()
             if line:  # ensure that line is not empty
                 self.publisher_.publish(String(data=line))

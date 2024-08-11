@@ -1,13 +1,14 @@
 <?xml version="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
-  <name>idp_joecart_vania</name>
+  <name>fruit_recognition</name>
   <version>0.0.0</version>
   <description>TODO: Package description</description>
-  <maintainer email="vania@todo.todo">vania</maintainer>
+  <maintainer email="wengyan888@gmail.com">yan</maintainer>
   <license>TODO: License declaration</license>
 
-  <depend>rclpy</depend>
+  <depend>rclcpp</depend>
+  <depend>std_msgs</depend>
 
   <test_depend>ament_copyright</test_depend>
   <test_depend>ament_flake8</test_depend>

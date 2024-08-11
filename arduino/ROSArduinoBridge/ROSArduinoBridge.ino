@@ -73,7 +73,7 @@
 #define BAUDRATE     57600
 
 /* Maximum PWM signal */
-#define MAX_PWM        255
+#define MAX_PWM        75
 
 #if defined(ARDUINO) && ARDUINO >= 100
 #include "Arduino.h"
@@ -248,6 +248,8 @@ int runCommand() {
 /* Setup function--runs once at startup. */
 void setup() {
   Serial.begin(BAUDRATE);
+
+  // Serial.println("Lets drive bitches");
 
 // Initialize the motor controller if used */
 #ifdef USE_BASE
