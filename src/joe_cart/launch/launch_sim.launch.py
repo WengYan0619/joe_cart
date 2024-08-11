@@ -45,7 +45,7 @@ def generate_launch_description():
 
     world_file_arg = DeclareLaunchArgument(
         'world',
-        default_value=os.path.join(get_package_share_directory(package_name), 'worlds', 'joe_mart.world'),
+        default_value=os.path.join(get_package_share_directory(package_name), 'worlds', 'joe_joe_mart.world'),
         description='Full path to the world file to load'
     )
 
