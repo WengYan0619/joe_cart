@@ -13,16 +13,14 @@ setup(
     ],
     install_requires=['setuptools'],
     zip_safe=True,
-    maintainer='yan',
-    maintainer_email='wengyan888@gmail.com',
+    maintainer='vania',
+    maintainer_email='vania@todo.todo',
     description='TODO: Package description',
     license='TODO: License declaration',
     tests_require=['pytest'],
     entry_points={
-    'console_scripts': [
-        'client_node = fruit_recognition.client_node:main',
-        'sender_node = fruit_recognition.sender_node:main',
-    ],
-},
+        'console_scripts': [
+        ],
+    },
 )
 

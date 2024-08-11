@@ -4,11 +4,10 @@
   <name>fruit_recognition</name>
   <version>0.0.0</version>
   <description>TODO: Package description</description>
-  <maintainer email="wengyan888@gmail.com">yan</maintainer>
+  <maintainer email="vania@todo.todo">vania</maintainer>
   <license>TODO: License declaration</license>
 
-  <depend>rclcpp</depend>
-  <depend>std_msgs</depend>
+  <depend>rclpy</depend>
 
   <test_depend>ament_copyright</test_depend>
   <test_depend>ament_flake8</test_depend>
