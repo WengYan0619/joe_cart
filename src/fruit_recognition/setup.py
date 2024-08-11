@@ -1,6 +1,6 @@
 from setuptools import find_packages, setup
 
-package_name = 'idp_joecart_vania'
+package_name = 'fruit_recognition'
 
 setup(
     name=package_name,
@@ -14,12 +14,15 @@ setup(
     install_requires=['setuptools'],
     zip_safe=True,
     maintainer='vania',
-    maintainer_email='vania@todo.todo',
+    maintainer_email='itsvaniacallista@gmail.com',
     description='TODO: Package description',
     license='TODO: License declaration',
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
+        'client_node = fruit_recognition.client_node:main',
+        'sender_node = fruit_recognition.sender_node:main',
+        
         ],
     },
 )
