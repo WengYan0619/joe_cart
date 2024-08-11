@@ -12,8 +12,8 @@ typedef struct {
   long PrevEnc;                  // last encoder count
 
   /*
-  * Using previous input (PrevInput) instead of PrevError to avoid derivative kick,
-  * see http://brettbeauregard.com/blog/2011/04/improving-the-beginner%E2%80%99s-pid-derivative-kick/
+  * Using previous input (PrevInput) instead of PrevError to avoid derivative Ki_rightck,
+  * see http://brettbeauregard.com/blog/2011/04/improving-the-beginner%E2%80%99s-pid-derivative-Ki_rightck/
   */
   int PrevInput;                // last input
   //int PrevErr;                   // last error
@@ -33,10 +33,15 @@ SetPointInfo;
 SetPointInfo leftPID, rightPID;
 
 /* PID Parameters */
-int Kp = 18;
-int Kd = 6;
-int Ki = 4;
-int Ko = 100;
+int Kp_right = 30;
+int Kd_right = 1;
+int Ki_right = 3;
+int Ko_right = 100;
+
+int Kp_left = 40;
+int Kd_left = 35;
+int Ki_left = 2;
+int Ko_left = 100;
 
 unsigned char moving = 0; // is the base in motion?
 
@@ -65,7 +70,7 @@ void resetPID(){
 }
 
 /* PID routine to compute the next motor commands */
-void doPID(SetPointInfo * p) {
+void doPIDRight(SetPointInfo * p) {
   long Perror;
   long output;
   int input;
@@ -80,12 +85,12 @@ void doPID(SetPointInfo * p) {
   Serial.print(p->TargetTicksPerFrame);
   Serial.print(" Perror: ");
   Serial.print(Perror);
-  Serial.print(" Kp: ");
-  Serial.print(Kp);
-  Serial.print(" Kd: ");
-  Serial.print(Kd);
-  Serial.print(" Ki: ");
-  Serial.print(Ki);
+  Serial.print(" Kp_right: ");
+  Serial.print(Kp_right);
+  Serial.print(" Kd_right: ");
+  Serial.print(Kd_right);
+  Serial.print(" Ki_right: ");
+  Serial.print(Ki_right);
   Serial.print(" PrevInput: ");
   Serial.print(p->PrevInput);
   Serial.print(" ITerm: ");
@@ -93,18 +98,18 @@ void doPID(SetPointInfo * p) {
 
 
   /*
-  * Avoid derivative kick and allow tuning changes,
-  * see http://brettbeauregard.com/blog/2011/04/improving-the-beginner%E2%80%99s-pid-derivative-kick/
+  * Avoid derivative Ki_rightck and allow tuning changes,
+  * see http://brettbeauregard.com/blog/2011/04/improving-the-beginner%E2%80%99s-pid-derivative-Ki_rightck/
   * see http://brettbeauregard.com/blog/2011/04/improving-the-beginner%E2%80%99s-pid-tuning-changes/
   */
-  //output = (Kp * Perror + Kd * (Perror - p->PrevErr) + Ki * p->Ierror) / Ko;
+  //output = (Kp_right * Perror + Kd_right * (Perror - p->PrevErr) + Ki_right * p->Ierror) / Ko_right;
   // p->PrevErr = Perror;
-  long output_temp = (Kp * Perror - Kd * (input - p->PrevInput) + p->ITerm);
+  long output_temp = (Kp_right * Perror - Kd_right * (input - p->PrevInput) + p->ITerm);
 
   Serial.print(output_temp);
-  Serial.print(" Output NO KO: ");
+  Serial.print(" Output NO Ko_right: ");
 
-  output = output_temp / Ko;
+  output = output_temp / Ko_right;
   p->PrevEnc = p->Encoder;
   
   Serial.print(" Not added with prev output:");
@@ -125,7 +130,75 @@ void doPID(SetPointInfo * p) {
   /*
   * allow turning changes, see http://brettbeauregard.com/blog/2011/04/improving-the-beginner%E2%80%99s-pid-tuning-changes/
   */
-    p->ITerm += Ki * Perror;
+    p->ITerm += Ki_right * Perror;
+
+  p->output = output;
+  p->PrevInput = input;
+
+  
+}
+
+void doPIDLeft(SetPointInfo * p) {
+  long Perror;
+  long output;
+  int input;
+
+  //Perror = p->TargetTicksPerFrame - (p->Encoder - p->PrevEnc);
+  input = p->Encoder - p->PrevEnc;
+  Perror = p->TargetTicksPerFrame - input;
+
+  Serial.print("Input:");
+  Serial.print(input);
+  Serial.print(" TargetTicks: ");
+  Serial.print(p->TargetTicksPerFrame);
+  Serial.print(" Perror: ");
+  Serial.print(Perror);
+  Serial.print(" Kp_left: ");
+  Serial.print(Kp_left);
+  Serial.print(" Kd_left: ");
+  Serial.print(Kd_left);
+  Serial.print(" Ki_left: ");
+  Serial.print(Ki_left);
+  Serial.print(" PrevInput: ");
+  Serial.print(p->PrevInput);
+  Serial.print(" ITerm: ");
+  Serial.print(p->ITerm);
+
+
+  /*
+  * Avoid derivative Ki_leftck and allow tuning changes,
+  * see http://brettbeauregard.com/blog/2011/04/improving-the-beginner%E2%80%99s-pid-derivative-Ki_leftck/
+  * see http://brettbeauregard.com/blog/2011/04/improving-the-beginner%E2%80%99s-pid-tuning-changes/
+  */
+  //output = (Kp_left * Perror + Kd_left * (Perror - p->PrevErr) + Ki_left * p->Ierror) / Ko_left;
+  // p->PrevErr = Perror;
+  long output_temp = (Kp_left * Perror - Kd_left * (input - p->PrevInput) + p->ITerm);
+
+  Serial.print(output_temp);
+  Serial.print(" Output NO Ko_left: ");
+
+  output = output_temp / Ko_left;
+  p->PrevEnc = p->Encoder;
+  
+  Serial.print(" Not added with prev output:");
+  Serial.print(output);
+
+  output += p->output;
+  // Accumulate Integral error *or* Limit output.
+  // Stop accumulating when output saturates
+
+  Serial.print(" Added with prev output:");
+  Serial.println(output);
+
+  if (output >= MAX_PWM)
+    output = MAX_PWM;
+  else if (output <= -MAX_PWM)
+    output = -MAX_PWM;
+  else
+  /*
+  * allow turning changes, see http://brettbeauregard.com/blog/2011/04/improving-the-beginner%E2%80%99s-pid-tuning-changes/
+  */
+    p->ITerm += Ki_left * Perror;
 
   p->output = output;
   p->PrevInput = input;
@@ -152,8 +225,8 @@ void updatePID() {
   }
 
   /* Compute PID update for each motor */
-  doPID(&rightPID);
-  doPID(&leftPID);
+  doPIDRight(&rightPID);
+  doPIDLeft(&leftPID);
 
   // Serial.println(rightPID.TargetTicksPerFrame);
 

@@ -232,10 +232,15 @@ int runCommand() {
        pid_args[i] = atoi(str);
        i++;
     }
-    Kp = pid_args[0];
-    Kd = pid_args[1];
-    Ki = pid_args[2];
-    Ko = pid_args[3];
+    Kp_left = pid_args[0];
+    Kd_left = pid_args[1];
+    Ki_left = pid_args[2];
+    Ko_left = pid_args[3];
+    
+    Kp_right = pid_args[0];
+    Kd_right = pid_args[1];
+    Ki_right = pid_args[2];
+    Ko_right = pid_args[3];
     Serial.println("OK");
     break;
 #endif
