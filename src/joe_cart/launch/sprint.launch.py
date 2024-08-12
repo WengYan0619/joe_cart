@@ -62,7 +62,7 @@ def generate_launch_description():
     # Run the spawner node from the gazebo_ros package. The entity name doesn't really matter if you only have a single robot.
     spawn_entity = Node(package='gazebo_ros', executable='spawn_entity.py',
                         arguments=['-topic', 'robot_description',
-                                   '-entity', 'joe_cart'],
+                                   '-entity', 'my_bot'],
                         output='screen')
 
         
@@ -89,6 +89,92 @@ def generate_launch_description():
         executable="spawner",
         arguments=["joint_broad", "-c", "/controller_manager"],
     )
+
+    # Launch Nav2 Map Server
+    map_yaml_path = os.path.join(get_package_share_directory(package_name), 'joe_mart.yaml')
+    
+    map_server = Node(
+        package='nav2_map_server',
+        executable='map_server',
+        name='map_server',
+        output='screen',
+        parameters=[{'use_sim_time': True},
+                    {'yaml_filename': 'joe_mart.yaml'}]
+    )
+
+    # Launch AMCL
+    amcl_params = os.path.join(get_package_share_directory(package_name), 'config', 'amcl_params.yaml')
+    amcl = Node(
+        package='nav2_amcl',
+        executable='amcl',
+        name='amcl',
+        output='screen',
+        parameters=[amcl_params,
+                    {'use_sim_time': True},
+                    {'set_initial_pose': True},
+                    {'initial_pose.x': 3.385},
+                    {'initial_pose.y': -1.367}]
+    )
+
+    # Delayed start for AMCL lifecycle bringup
+    delayed_amcl = TimerAction(
+        period=3.0,
+        actions=[
+            Node(
+                package='nav2_lifecycle_manager',
+                executable='lifecycle_manager',
+                name='lifecycle_manager_localization',
+                output='screen',
+                parameters=[
+                    {'use_sim_time': True},
+                    {'autostart': True},
+                    {'node_names': ['amcl']}
+                ]
+            )
+        ]
+    )
+
+    # Delayed start for map_server lifecycle bringup
+    delayed_map_server = TimerAction(
+        period=2.0,
+        actions=[
+            Node(
+                package='nav2_lifecycle_manager',
+                executable='lifecycle_manager',
+                name='map_server',
+                output='screen',
+                parameters=[
+                    {'use_sim_time': True},
+                    {'autostart': True},
+                    {'node_names': ['map_server']}
+                ]
+            )
+        ]
+    )
+
+    # Launch ROS Bridge Server
+    rosbridge_server = Node(
+        package='rosbridge_server',
+        executable='rosbridge_websocket',
+        name='rosbridge_server',
+        output='screen',
+        parameters=[{'use_sim_time': True}]
+    )
+
+    # Launch RViz2 with custom configuration
+    rviz_config_file = os.path.join(get_package_share_directory(package_name), 'configs', 'sprint.rviz')
+    rviz2 = Node(
+        package='rviz2',
+        executable='rviz2',
+        name='rviz2',
+        output='screen',
+        arguments=['-d', '/home/zawl/joe_cart/src/joe_cart/config/sprint.rviz'],
+        parameters=[{'use_sim_time': True}]
+    )
+
+    # Add rosbridge_server to the final LaunchDescription return
+
+    # Make sure to add map_server to the final LaunchDescription return
 
     \
     # Code for delaying a node (I haven't tested how effective it is)
@@ -118,5 +204,11 @@ def generate_launch_description():
         gazebo,
         spawn_entity,
         diff_drive_spawner,
-        joint_broad_spawner
+        joint_broad_spawner,
+        map_server,
+        delayed_map_server,
+        amcl,
+        delayed_amcl,
+        rosbridge_server,
+        rviz2
     ])
