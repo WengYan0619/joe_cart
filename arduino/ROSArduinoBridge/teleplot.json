@@ -10,9 +10,9 @@
          },
          "series": [
             {
-               "name": "leftMotorMultipler",
+               "name": "leftMotorKpMultiplier",
                "sourceNames": [
-                  "leftMotorMultipler"
+                  "leftMotorKpMultiplier"
                ],
                "formula": "",
                "options": {
@@ -293,5 +293,5 @@
          ]
       }
    ],
-   "viewDuration": "15"
+   "viewDuration": "5"
 }

@@ -33,9 +33,9 @@ SetPointInfo;
 SetPointInfo leftPID, rightPID;
 
 /* PID Parameters */
-int Kp = 30;
+int Kp = 42;
 int Kd = 10;
-double Ki = 0.5;
+double Ki = 0.1;
 int Ko = 100;
 
 unsigned char moving = 0; // is the base in motion?
@@ -105,7 +105,23 @@ void doPID(SetPointInfo * p, char side) {
   */
   //output = (Kp * Perror + Kd * (Perror - p->PrevErr) + Ki * p->Ierror) / Ko;
   // p->PrevErr = Perror;
-  long output_temp = (Kp * Perror - Kd * (input - p->PrevInput) + static_cast<int>(p->ITerm));
+
+  double leftMotorKpMultiplier = 1;
+
+  long output_temp;
+
+  if (side == 'L'){
+    double Kp_left = Kp * leftMotorKpMultiplier;
+    Serial.print(">leftMotorKpMultiplier:");
+    Serial.println(leftMotorKpMultiplier);
+
+    Serial.print(">Kp_left:");
+    Serial.println(Kp_left);
+
+    output_temp = (Kp_left * Perror - Kd * (input - p->PrevInput) + static_cast<int>(p->ITerm));
+  } else {
+    output_temp = (Kp * Perror - Kd * (input - p->PrevInput) + static_cast<int>(p->ITerm));
+  }
 
   // Serial.print(output_temp);
   // Serial.print(" Output NO KO: ");
@@ -132,13 +148,13 @@ void doPID(SetPointInfo * p, char side) {
     Serial.print(">PWM_output_L:");
   Serial.println(output);
 
-  double leftMotorMultiplier = 1.4;
+  double leftMotorPWMMultiplier = 1.4;
 
   if (side == 'L' && output < 35)
     { 
-      output = output * leftMotorMultiplier;
-      Serial.print(">leftMotorMultipler:");
-      Serial.println(leftMotorMultiplier);
+      output = output * leftMotorPWMMultiplier;
+      Serial.print(">leftMotorPWMMultipler:");
+      Serial.println(leftMotorPWMMultiplier);
     }
 
   if (output >= MAX_PWM)
