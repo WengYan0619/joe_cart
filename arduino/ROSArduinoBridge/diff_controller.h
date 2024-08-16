@@ -24,7 +24,7 @@ typedef struct {
   * see http://brettbeauregard.com/blog/2011/04/improving-the-beginner%E2%80%99s-pid-tuning-changes/
   */
   //int Ierror;
-  int ITerm;                    //integrated term
+  double ITerm;                    //integrated term
 
   long output;                    // last motor setting
 }
@@ -34,8 +34,8 @@ SetPointInfo leftPID, rightPID;
 
 /* PID Parameters */
 int Kp = 30;
-int Kd = 60;
-int Ki = 1;
+int Kd = 10;
+double Ki = 0.5;
 int Ko = 100;
 
 unsigned char moving = 0; // is the base in motion?
@@ -105,7 +105,7 @@ void doPID(SetPointInfo * p, char side) {
   */
   //output = (Kp * Perror + Kd * (Perror - p->PrevErr) + Ki * p->Ierror) / Ko;
   // p->PrevErr = Perror;
-  long output_temp = (Kp * Perror - Kd * (input - p->PrevInput) + p->ITerm);
+  long output_temp = (Kp * Perror - Kd * (input - p->PrevInput) + static_cast<int>(p->ITerm));
 
   // Serial.print(output_temp);
   // Serial.print(" Output NO KO: ");
