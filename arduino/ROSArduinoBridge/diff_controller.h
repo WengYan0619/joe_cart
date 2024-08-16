@@ -33,7 +33,7 @@ SetPointInfo;
 SetPointInfo leftPID, rightPID;
 
 /* PID Parameters */
-int Kp = 42;
+int Kp = 20;
 int Kd = 10;
 double Ki = 0.1;
 int Ko = 100;
@@ -106,7 +106,7 @@ void doPID(SetPointInfo * p, char side) {
   //output = (Kp * Perror + Kd * (Perror - p->PrevErr) + Ki * p->Ierror) / Ko;
   // p->PrevErr = Perror;
 
-  double leftMotorKpMultiplier = 1;
+  double leftMotorKpMultiplier = 1.4;
 
   long output_temp;
 

@@ -10,6 +10,30 @@
          },
          "series": [
             {
+               "name": "leftMotorPWMMultipler",
+               "sourceNames": [
+                  "leftMotorPWMMultipler"
+               ],
+               "formula": "",
+               "options": {
+                  "stroke": "rgba(231,76,60,1)",
+                  "fill": "rgba(231,76,60,0.1)"
+               },
+               "type": "number"
+            }
+         ],
+         "precision_mode": 0
+      },
+      {
+         "type": "single_value_number",
+         "gridPos": {
+            "h": 2,
+            "w": 2,
+            "x": 0,
+            "y": 0
+         },
+         "series": [
+            {
                "name": "leftMotorKpMultiplier",
                "sourceNames": [
                   "leftMotorKpMultiplier"
@@ -28,7 +52,7 @@
          "type": "single_value_number",
          "gridPos": {
             "h": 2,
-            "w": 3,
+            "w": 2,
             "x": 0,
             "y": 0
          },
@@ -52,7 +76,7 @@
          "type": "single_value_number",
          "gridPos": {
             "h": 2,
-            "w": 3,
+            "w": 2,
             "x": 0,
             "y": 0
          },
@@ -76,7 +100,7 @@
          "type": "single_value_number",
          "gridPos": {
             "h": 2,
-            "w": 3,
+            "w": 2,
             "x": 0,
             "y": 0
          },
@@ -100,7 +124,7 @@
          "type": "single_value_number",
          "gridPos": {
             "h": 2,
-            "w": 4,
+            "w": 3,
             "x": 0,
             "y": 0
          },
@@ -148,7 +172,7 @@
          "type": "single_value_number",
          "gridPos": {
             "h": 2,
-            "w": 4,
+            "w": 3,
             "x": 0,
             "y": 0
          },
