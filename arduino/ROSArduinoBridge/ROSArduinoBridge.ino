@@ -61,6 +61,7 @@
    
    /* Encoders directly attached to Arduino board */
    #define ARDUINO_ENC_COUNTER
+  // #define ARDUINIO_MEGA_ENC_COUNTER
 
    /* L298 Motor driver*/
    #define L298_MOTOR_DRIVER
@@ -114,7 +115,7 @@
 
   /* Stop the robot if it hasn't received a movement command
    in this number of milliseconds */
-  #define AUTO_STOP_INTERVAL 5000
+  #define AUTO_STOP_INTERVAL 50000
   long lastMotorCommand = AUTO_STOP_INTERVAL;
 #endif
 
@@ -271,6 +272,21 @@ void setup() {
     
     // enable PCINT1 and PCINT2 interrupt in the general interrupt mask
     PCICR |= (1 << PCIE1) | (1 << PCIE2);
+  #endif
+
+  #ifdef ARDUINIO_MEGA_ENC_COUNTER
+    Serial3.begin(BAUDRATE);
+    // Set up the encoder pins as inputs
+    pinMode(LEFT_ENC_A, INPUT);
+    pinMode(LEFT_ENC_B, INPUT);
+    pinMode(RIGHT_ENC_A, INPUT);
+    pinMode(RIGHT_ENC_B, INPUT);
+
+    attachInterrupt(digitalPinToInterrupt(LEFT_ENC_A), leftEncoderISR, CHANGE);
+    attachInterrupt(digitalPinToInterrupt(RIGHT_ENC_A), rightEncoderISR, CHANGE);
+
+    Serial.println("Mega encoders attached");
+
   #endif
   initMotorController();
   resetPID();

@@ -68,6 +68,35 @@
       return;
     }
   }
+#elif defined(ARDUINIO_MEGA_ENC_COUNTER)
+  volatile long left_enc_pos = 0L;
+  volatile long right_enc_pos = 0L;
+
+  void leftEncoderISR() {
+  if (digitalRead(LEFT_ENC_A) == digitalRead(LEFT_ENC_B)) {
+    left_enc_pos++;
+  } else {
+    left_enc_pos--;
+  }
+}
+
+void rightEncoderISR() {
+  if (digitalRead(RIGHT_ENC_A) == digitalRead(RIGHT_ENC_B)) {
+    right_enc_pos++;
+  } else {
+    right_enc_pos--;
+  }
+}
+
+long readEncoder(int i) {
+  if (i == LEFT) return static_cast<long>(left_enc_pos*3.43);
+  else return right_enc_pos;
+}
+
+void resetEncoder(int i) {
+  if (i == LEFT) left_enc_pos = 0L;
+  else right_enc_pos = 0L;
+}
 #else
   #error A encoder driver must be selected!
 #endif

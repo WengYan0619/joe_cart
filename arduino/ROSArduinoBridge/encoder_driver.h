@@ -13,6 +13,13 @@
   #define RIGHT_ENC_PIN_A PC4  //pin A4
   #define RIGHT_ENC_PIN_B PC5   //pin A5
 #endif
+
+#ifdef ARDUINIO_MEGA_ENC_COUNTER
+  const byte LEFT_ENC_A = 18;
+  const byte LEFT_ENC_B = 19;
+  const byte RIGHT_ENC_A = 20;
+  const byte RIGHT_ENC_B = 21;
+#endif
    
 long readEncoder(int i);
 void resetEncoder(int i);

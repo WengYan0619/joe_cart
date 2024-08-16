@@ -5,7 +5,7 @@
   http://vanadium-ros-pkg.googlecode.com/svn/trunk/arbotix/
 */
 
-#define PRINT_ENABLE false
+#define PRINT_ENABLE_SERIAL
 
 /* PID setpoint info For a Motor */
 typedef struct
@@ -78,31 +78,58 @@ void doPID(SetPointInfo *p, char side)
   input = p->Encoder - p->PrevEnc;
   Perror = p->TargetTicksPerFrame - input;
 
-  if (PRINT_ENABLE)
+#ifdef PRINT_ENABLE_SERIAL
+  if (side == 'R')
+    Serial.print(">Input_R:");
+  if (side == 'L')
+    Serial.print(">Input_L:");
+  Serial.println(input);
+  if(side == 'R')
+    Serial.print(">TargetTicks_R: ");
+  if(side == 'L')
+    Serial.print(">TargetTicks_L: ");
+  Serial.println(p->TargetTicksPerFrame);
+  // Serial.print(" Perror: ");
+  // Serial.print(Perror);
+  if (side == 'R')
   {
-    if (side == 'R')
-      Serial.print(">Input_R:");
-    if (side == 'L')
-      Serial.print(">Input_L:");
-    Serial.println(input);
-    Serial.print(">TargetTicks: ");
-    Serial.println(p->TargetTicksPerFrame);
-    // Serial.print(" Perror: ");
-    // Serial.print(Perror);
-    if (side == 'R')
-    {
-      Serial.print(">Kp:");
-      Serial.println(Kp);
-      Serial.print(">Kd: ");
-      Serial.println(Kd);
-      Serial.print(">Ki: ");
-      Serial.println(Ki);
-    }
-    // Serial.print(" PrevInput: ");
-    // Serial.print(p->PrevInput);
-    // Serial.print(" ITerm: ");
-    // Serial.print(p->ITerm);
+    Serial.print(">Kp:");
+    Serial.println(Kp);
+    Serial.print(">Kd: ");
+    Serial.println(Kd);
+    Serial.print(">Ki: ");
+    Serial.println(Ki);
   }
+  // Serial.print(" PrevInput: ");
+  // Serial.print(p->PrevInput);
+  // Serial.print(" ITerm: ");
+  // Serial.print(p->ITerm);
+#endif
+
+#ifdef PRINT_ENABLE_SERIAL3
+  if (side == 'R')
+    Serial3.print(">Input_R:");
+  if (side == 'L')
+    Serial3.print(">Input_L:");
+  Serial3.println(input);
+  Serial3.print(">TargetTicks: ");
+  Serial3.println(p->TargetTicksPerFrame);
+  // Serial3.print(" Perror: ");
+  // Serial3.print(Perror);
+  if (side == 'R')
+  {
+    Serial3.print(">Kp:");
+    Serial3.println(Kp);
+    Serial3.print(">Kd: ");
+    Serial3.println(Kd);
+    Serial3.print(">Ki: ");
+    Serial3.println(Ki);
+  }
+  // Serial3.print(" PrevInput: ");
+  // Serial3.print(p->PrevInput);
+  // Serial3.print(" ITerm: ");
+  // Serial3.print(p->ITerm);
+#endif
 
   /*
    * Avoid derivative kick and allow tuning changes,
@@ -119,14 +146,21 @@ void doPID(SetPointInfo *p, char side)
   if (side == 'L')
   {
     double Kp_left = Kp * leftMotorKpMultiplier;
-    if (PRINT_ENABLE)
-    {
-      Serial.print(">leftMotorKpMultiplier:");
-      Serial.println(leftMotorKpMultiplier);
+#ifdef PRINT_ENABLE_SERIAL
+    Serial.print(">leftMotorKpMultiplier:");
+    Serial.println(leftMotorKpMultiplier);
 
-      Serial.print(">Kp_left:");
-      Serial.println(Kp_left);
-    }
+    Serial.print(">Kp_left:");
+    Serial.println(Kp_left);
+#endif
+
+#ifdef PRINT_ENABLE_SERIAL3
+    Serial3.print(">leftMotorKpMultiplier:");
+    Serial3.println(leftMotorKpMultiplier);
+
+    Serial3.print(">Kp_left:");
+    Serial3.println(Kp_left);
+#endif
 
     output_temp = (Kp_left * Perror - Kd * (input - p->PrevInput) + static_cast<int>(p->ITerm));
   }
@@ -141,14 +175,21 @@ void doPID(SetPointInfo *p, char side)
   output = output_temp / Ko;
   p->PrevEnc = p->Encoder;
 
-  if (PRINT_ENABLE)
-  {
-    if (side == 'R')
-      Serial.print(">PID_output_R:");
-    if (side == 'L')
-      Serial.print(">PID_output_L:");
-    Serial.println(output);
-  }
+#ifdef PRINT_ENABLE_SERIAL
+  if (side == 'R')
+    Serial.print(">PID_output_R:");
+  if (side == 'L')
+    Serial.print(">PID_output_L:");
+  Serial.println(output);
+#endif
+
+#ifdef PRINT_ENABLE_SERIAL3
+  if (side == 'R')
+    Serial3.print(">PID_output_R:");
+  if (side == 'L')
+    Serial3.print(">PID_output_L:");
+  Serial3.println(output);
+#endif
 
   output += p->output;
   // Accumulate Integral error *or* Limit output.
@@ -157,25 +198,36 @@ void doPID(SetPointInfo *p, char side)
   // Serial.print(" Added with prev output:");
   // Serial.println(output);
 
-  if (PRINT_ENABLE)
-  {
-    if (side == 'R')
-      Serial.print(">PWM_output_R:");
-    if (side == 'L')
-      Serial.print(">PWM_output_L:");
-    Serial.println(output);
-  }
+#ifdef PRINT_ENABLE_SERIAL
+  if (side == 'R')
+    Serial.print(">PWM_output_R:");
+  if (side == 'L')
+    Serial.print(">PWM_output_L:");
+  Serial.println(output);
+#endif
+
+#ifdef PRINT_ENABLE_SERIAL3
+  if (side == 'R')
+    Serial3.print(">PWM_output_R:");
+  if (side == 'L')
+    Serial3.print(">PWM_output_L:");
+  Serial3.println(output);
+#endif
 
   double leftMotorPWMMultiplier = 1;
 
   if (side == 'L' && output < 35)
   {
     output = output * leftMotorPWMMultiplier;
-    if (PRINT_ENABLE)
-    {
-      Serial.print(">leftMotorPWMMultipler:");
-      Serial.println(leftMotorPWMMultiplier);
-    }
+#ifdef PRINT_ENABLE_SERIAL
+    Serial.print(">leftMotorPWMMultipler:");
+    Serial.println(leftMotorPWMMultiplier);
+#endif
+
+#ifdef PRINT_ENABLE_SERIAL3
+    Serial3.print(">leftMotorPWMMultipler:");
+    Serial3.println(leftMotorPWMMultiplier);
+#endif
   }
 
   if (output >= MAX_PWM)

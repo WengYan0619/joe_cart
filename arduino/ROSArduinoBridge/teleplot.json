@@ -4,55 +4,7 @@
          "type": "single_value_number",
          "gridPos": {
             "h": 2,
-            "w": 2,
-            "x": 0,
-            "y": 0
-         },
-         "series": [
-            {
-               "name": "leftMotorPWMMultipler",
-               "sourceNames": [
-                  "leftMotorPWMMultipler"
-               ],
-               "formula": "",
-               "options": {
-                  "stroke": "rgba(231,76,60,1)",
-                  "fill": "rgba(231,76,60,0.1)"
-               },
-               "type": "number"
-            }
-         ],
-         "precision_mode": 0
-      },
-      {
-         "type": "single_value_number",
-         "gridPos": {
-            "h": 2,
-            "w": 2,
-            "x": 0,
-            "y": 0
-         },
-         "series": [
-            {
-               "name": "leftMotorKpMultiplier",
-               "sourceNames": [
-                  "leftMotorKpMultiplier"
-               ],
-               "formula": "",
-               "options": {
-                  "stroke": "rgba(231,76,60,1)",
-                  "fill": "rgba(231,76,60,0.1)"
-               },
-               "type": "number"
-            }
-         ],
-         "precision_mode": 0
-      },
-      {
-         "type": "single_value_number",
-         "gridPos": {
-            "h": 2,
-            "w": 2,
+            "w": 4,
             "x": 0,
             "y": 0
          },
@@ -76,31 +28,7 @@
          "type": "single_value_number",
          "gridPos": {
             "h": 2,
-            "w": 2,
-            "x": 0,
-            "y": 0
-         },
-         "series": [
-            {
-               "name": "Ki",
-               "sourceNames": [
-                  "Ki"
-               ],
-               "formula": "",
-               "options": {
-                  "stroke": "rgba(231,76,60,1)",
-                  "fill": "rgba(231,76,60,0.1)"
-               },
-               "type": "number"
-            }
-         ],
-         "precision_mode": 0
-      },
-      {
-         "type": "single_value_number",
-         "gridPos": {
-            "h": 2,
-            "w": 2,
+            "w": 4,
             "x": 0,
             "y": 0
          },
@@ -124,15 +52,15 @@
          "type": "single_value_number",
          "gridPos": {
             "h": 2,
-            "w": 3,
+            "w": 4,
             "x": 0,
             "y": 0
          },
          "series": [
             {
-               "name": "TargetTicks",
+               "name": "Ki",
                "sourceNames": [
-                  "TargetTicks"
+                  "Ki"
                ],
                "formula": "",
                "options": {
@@ -148,7 +76,31 @@
          "type": "single_value_number",
          "gridPos": {
             "h": 2,
-            "w": 3,
+            "w": 6,
+            "x": 0,
+            "y": 0
+         },
+         "series": [
+            {
+               "name": "Input_L",
+               "sourceNames": [
+                  "Input_L"
+               ],
+               "formula": "",
+               "options": {
+                  "stroke": "rgba(231,76,60,1)",
+                  "fill": "rgba(231,76,60,0.1)"
+               },
+               "type": "number"
+            }
+         ],
+         "precision_mode": 0
+      },
+      {
+         "type": "single_value_number",
+         "gridPos": {
+            "h": 2,
+            "w": 6,
             "x": 0,
             "y": 0
          },
@@ -172,15 +124,39 @@
          "type": "single_value_number",
          "gridPos": {
             "h": 2,
-            "w": 3,
+            "w": 6,
             "x": 0,
             "y": 0
          },
          "series": [
             {
-               "name": "Input_L",
+               "name": "TargetTicks_L",
                "sourceNames": [
-                  "Input_L"
+                  "TargetTicks_L"
+               ],
+               "formula": "",
+               "options": {
+                  "stroke": "rgba(231,76,60,1)",
+                  "fill": "rgba(231,76,60,0.1)"
+               },
+               "type": "number"
+            }
+         ],
+         "precision_mode": 0
+      },
+      {
+         "type": "single_value_number",
+         "gridPos": {
+            "h": 2,
+            "w": 6,
+            "x": 0,
+            "y": 0
+         },
+         "series": [
+            {
+               "name": "TargetTicks_R",
+               "sourceNames": [
+                  "TargetTicks_R"
                ],
                "formula": "",
                "options": {
@@ -202,9 +178,22 @@
          },
          "series": [
             {
-               "name": "TargetTicks",
+               "name": "TargetTicks_R",
                "sourceNames": [
-                  "TargetTicks"
+                  "TargetTicks_R"
+               ],
+               "formula": "",
+               "options": {
+                  "_serie": "TargetTicks",
+                  "stroke": "rgba(231,76,60,1)",
+                  "fill": "rgba(231,76,60,0.1)"
+               },
+               "type": "number"
+            },
+            {
+               "name": "TargetTicks_L",
+               "sourceNames": [
+                  "TargetTicks_L"
                ],
                "formula": "",
                "options": {
@@ -311,6 +300,54 @@
                   "_serie": "PWM_output_R",
                   "stroke": "rgba(52,152,219,1)",
                   "fill": "rgba(52,152,219,0.1)"
+               },
+               "type": "number"
+            }
+         ]
+      },
+      {
+         "type": "chart",
+         "gridPos": {
+            "h": 6,
+            "w": 6,
+            "x": 0,
+            "y": 0
+         },
+         "series": [
+            {
+               "name": "TargetTicks_R",
+               "sourceNames": [
+                  "TargetTicks_R"
+               ],
+               "formula": "",
+               "options": {
+                  "_serie": "TargetTicks_R",
+                  "stroke": "rgba(231,76,60,1)",
+                  "fill": "rgba(231,76,60,0.1)"
+               },
+               "type": "number"
+            }
+         ]
+      },
+      {
+         "type": "chart",
+         "gridPos": {
+            "h": 6,
+            "w": 6,
+            "x": 0,
+            "y": 0
+         },
+         "series": [
+            {
+               "name": "TargetTicks_L",
+               "sourceNames": [
+                  "TargetTicks_L"
+               ],
+               "formula": "",
+               "options": {
+                  "_serie": "TargetTicks_L",
+                  "stroke": "rgba(231,76,60,1)",
+                  "fill": "rgba(231,76,60,0.1)"
                },
                "type": "number"
             }

@@ -51,14 +51,9 @@ void ArduinoComms::setPidValues(float k_p, float k_d, float k_i, float k_o)
 
 std::string ArduinoComms::sendMsg(const std::string &msg_to_send, bool print_output)
 {
+    
     serial_conn_.write(msg_to_send);
     std::string response = serial_conn_.readline();
-
-    if (print_output)
-    {
-        // RCLCPP_INFO_STREAM(logger_,"Sent: " << msg_to_send);
-        // RCLCPP_INFO_STREAM(logger_,"Received: " << response);
-    }
 
     return response;
 }
