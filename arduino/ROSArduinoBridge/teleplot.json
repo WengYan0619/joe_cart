@@ -178,32 +178,6 @@
          },
          "series": [
             {
-               "name": "TargetTicks_R",
-               "sourceNames": [
-                  "TargetTicks_R"
-               ],
-               "formula": "",
-               "options": {
-                  "_serie": "TargetTicks",
-                  "stroke": "rgba(231,76,60,1)",
-                  "fill": "rgba(231,76,60,0.1)"
-               },
-               "type": "number"
-            },
-            {
-               "name": "TargetTicks_L",
-               "sourceNames": [
-                  "TargetTicks_L"
-               ],
-               "formula": "",
-               "options": {
-                  "_serie": "TargetTicks",
-                  "stroke": "rgba(231,76,60,1)",
-                  "fill": "rgba(231,76,60,0.1)"
-               },
-               "type": "number"
-            },
-            {
                "name": "Input_R",
                "sourceNames": [
                   "Input_R"
@@ -226,6 +200,32 @@
                   "_serie": "Input_L",
                   "stroke": "rgba(46,204,113,1)",
                   "fill": "rgba(46,204,113,0.1)"
+               },
+               "type": "number"
+            },
+            {
+               "name": "TargetTicks_R",
+               "sourceNames": [
+                  "TargetTicks_R"
+               ],
+               "formula": "",
+               "options": {
+                  "_serie": "TargetTicks_R",
+                  "stroke": "rgba(155,89,182,1)",
+                  "fill": "rgba(155,89,182,0.1)"
+               },
+               "type": "number"
+            },
+            {
+               "name": "TargetTicks_L",
+               "sourceNames": [
+                  "TargetTicks_L"
+               ],
+               "formula": "",
+               "options": {
+                  "_serie": "TargetTicks_L",
+                  "stroke": "rgba(241,196,15,1)",
+                  "fill": "rgba(241,196,15,0.1)"
                },
                "type": "number"
             }
@@ -300,54 +300,6 @@
                   "_serie": "PWM_output_R",
                   "stroke": "rgba(52,152,219,1)",
                   "fill": "rgba(52,152,219,0.1)"
-               },
-               "type": "number"
-            }
-         ]
-      },
-      {
-         "type": "chart",
-         "gridPos": {
-            "h": 6,
-            "w": 6,
-            "x": 0,
-            "y": 0
-         },
-         "series": [
-            {
-               "name": "TargetTicks_R",
-               "sourceNames": [
-                  "TargetTicks_R"
-               ],
-               "formula": "",
-               "options": {
-                  "_serie": "TargetTicks_R",
-                  "stroke": "rgba(231,76,60,1)",
-                  "fill": "rgba(231,76,60,0.1)"
-               },
-               "type": "number"
-            }
-         ]
-      },
-      {
-         "type": "chart",
-         "gridPos": {
-            "h": 6,
-            "w": 6,
-            "x": 0,
-            "y": 0
-         },
-         "series": [
-            {
-               "name": "TargetTicks_L",
-               "sourceNames": [
-                  "TargetTicks_L"
-               ],
-               "formula": "",
-               "options": {
-                  "_serie": "TargetTicks_L",
-                  "stroke": "rgba(231,76,60,1)",
-                  "fill": "rgba(231,76,60,0.1)"
                },
                "type": "number"
             }
