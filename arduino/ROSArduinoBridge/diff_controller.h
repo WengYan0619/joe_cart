@@ -33,9 +33,9 @@ SetPointInfo;
 SetPointInfo leftPID, rightPID;
 
 /* PID Parameters */
-int Kp = 14;
-int Kd = 0;
-int Ki = 0;
+int Kp = 30;
+int Kd = 60;
+int Ki = 1;
 int Ko = 100;
 
 unsigned char moving = 0; // is the base in motion?
@@ -65,7 +65,7 @@ void resetPID(){
 }
 
 /* PID routine to compute the next motor commands */
-void doPID(SetPointInfo * p) {
+void doPID(SetPointInfo * p, char side) {
   long Perror;
   long output;
   int input;
@@ -74,18 +74,24 @@ void doPID(SetPointInfo * p) {
   input = p->Encoder - p->PrevEnc;
   Perror = p->TargetTicksPerFrame - input;
 
-  // Serial.print("Input:");
-  // Serial.print(input);
-  // Serial.print(" TargetTicks: ");
-  // Serial.print(p->TargetTicksPerFrame);
+  if (side == 'R')
+    Serial.print(">Input_R:");
+  if (side == 'L')
+    Serial.print(">Input_L:");
+  Serial.println(input);
+  Serial.print(">TargetTicks: ");
+  Serial.println(p->TargetTicksPerFrame);
   // Serial.print(" Perror: ");
   // Serial.print(Perror);
-  // Serial.print(" Kp: ");
-  // Serial.print(Kp);
-  // Serial.print(" Kd: ");
-  // Serial.print(Kd);
-  // Serial.print(" Ki: ");
-  // Serial.print(Ki);
+  if (side == 'R')
+  {
+    Serial.print(">Kp:");
+    Serial.println(Kp);
+    Serial.print(">Kd: ");
+    Serial.println(Kd);
+    Serial.print(">Ki: ");
+    Serial.println(Ki);
+  }
   // Serial.print(" PrevInput: ");
   // Serial.print(p->PrevInput);
   // Serial.print(" ITerm: ");
@@ -107,8 +113,11 @@ void doPID(SetPointInfo * p) {
   output = output_temp / Ko;
   p->PrevEnc = p->Encoder;
   
-  // Serial.print(" Not added with prev output:");
-  // Serial.print(output);
+  if(side == 'R')
+    Serial.print(">PID_output_R:");
+  if(side == 'L')
+    Serial.print(">PID_output_L:");
+  Serial.println(output);
 
   output += p->output;
   // Accumulate Integral error *or* Limit output.
@@ -116,6 +125,21 @@ void doPID(SetPointInfo * p) {
 
   // Serial.print(" Added with prev output:");
   // Serial.println(output);
+
+  if(side == 'R')
+    Serial.print(">PWM_output_R:");
+  if(side == 'L')
+    Serial.print(">PWM_output_L:");
+  Serial.println(output);
+
+  double leftMotorMultiplier = 1.4;
+
+  if (side == 'L' && output < 35)
+    { 
+      output = output * leftMotorMultiplier;
+      Serial.print(">leftMotorMultipler:");
+      Serial.println(leftMotorMultiplier);
+    }
 
   if (output >= MAX_PWM)
     output = MAX_PWM;
@@ -152,8 +176,8 @@ void updatePID() {
   }
 
   /* Compute PID update for each motor */
-  doPID(&rightPID);
-  doPID(&leftPID);
+  doPID(&rightPID, 'R');
+  doPID(&leftPID, 'L');
 
   // Serial.println(rightPID.TargetTicksPerFrame);
 

@@ -54,7 +54,7 @@
   
   /* Wrap the encoder reading function */
   long readEncoder(int i) {
-    if (i == LEFT) return left_enc_pos;
+    if (i == LEFT) return static_cast<long>(left_enc_pos*3.43);
     else return right_enc_pos;
   }
 
