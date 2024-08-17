@@ -23,7 +23,7 @@ class SenderNode(Node):
         self.bridge = CvBridge()
         
         # Declare and get parameters
-        self.declare_parameter('yolo_model', '/home/yan/dev_ws/src/fruit_recognition/fruit_recognition/best.pt')
+        self.declare_parameter('yolo_model', '/home/vania/joe_cart/src/fruit_recognition/fruit_recognition/best.pt')
         self.declare_parameter('server_ip', '0.0.0.0')  # Listen on all interfaces
         self.declare_parameter('server_port', 5000)
         self.declare_parameter('target_fps', 10)
@@ -33,7 +33,7 @@ class SenderNode(Node):
         self.declare_parameter('yolo_input_size', [640, 640])
         self.declare_parameter('confidence_threshold', 0.7)
         self.declare_parameter('nms_threshold', 0.45)
-        self.declare_parameter('specified_classes', ['orange','banana'])  
+        self.declare_parameter('specified_classes', ['Orange','Banana','Apple'])  
 
         self.model = YOLO(self.get_parameter('yolo_model').value)
         self.server_ip = self.get_parameter('server_ip').value
