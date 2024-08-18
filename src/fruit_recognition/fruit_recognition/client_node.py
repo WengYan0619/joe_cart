@@ -43,9 +43,9 @@ class ClientNode(Node):
 
         # Add product ID mapping
         self.product_id_mapping = {
-            'Apple': '43c21d2a',
-            'Orange': '8367d902',
-            'Banana': '349ab4df'
+            'apple': '43c21d2a',
+            'orange': '8367d902',
+            'banana': '349ab4df'
         }
 
         # ROS Publisher for simplified YOLO results
