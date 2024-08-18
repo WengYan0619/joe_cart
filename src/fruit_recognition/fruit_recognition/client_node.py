@@ -137,13 +137,12 @@ class ClientNode(Node):
                     if detection['class'] not in published_classes:
                         rfid_identifier = self.product_id_mapping.get(detection['class'], 'UNKNOWN')
                         
-                        
-                        # Publish RFID identifier to rfid_data
-                        rfid_msg = String()
-                        rfid_msg.data = f"ADD: {rfid_identifier}"
-                        self.rfid_publisher.publish(rfid_msg)
-                        
-                        self.get_logger().info(f"Published: 'ADD: {rfid_identifier}' to rfid_data")
+                # Publish RFID identifier to rfid_data
+                rfid_msg = String()
+                rfid_msg.data = f"ADD: {rfid_identifier}"
+                self.rfid_publisher.publish(rfid_msg)
+                
+                self.get_logger().info(f"Published: 'ADD: {rfid_identifier}' to rfid_data")
 
             except Exception as e:
                 self.get_logger().error(f"Error processing detection results: {str(e)}")
