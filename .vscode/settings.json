@@ -1,3 +1,17 @@
 {
-    "cmake.configureOnOpen": false
+    "cmake.configureOnOpen": false,
+    "python.autoComplete.extraPaths": [
+        "/home/zawl/joe_cart/install/my_rfid_pkg/lib/python3.10/site-packages",
+        "/home/zawl/joe_cart/install/idp_joecart_vania/lib/python3.10/site-packages",
+        "/home/zawl/joe_cart/install/fruit_recognition/lib/python3.10/site-packages",
+        "/opt/ros/humble/lib/python3.10/site-packages",
+        "/opt/ros/humble/local/lib/python3.10/dist-packages"
+    ],
+    "python.analysis.extraPaths": [
+        "/home/zawl/joe_cart/install/my_rfid_pkg/lib/python3.10/site-packages",
+        "/home/zawl/joe_cart/install/idp_joecart_vania/lib/python3.10/site-packages",
+        "/home/zawl/joe_cart/install/fruit_recognition/lib/python3.10/site-packages",
+        "/opt/ros/humble/lib/python3.10/site-packages",
+        "/opt/ros/humble/local/lib/python3.10/dist-packages"
+    ]
 }

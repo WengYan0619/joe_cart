@@ -23,6 +23,10 @@
         <color rgba="1 0 0 1"/>
     </material>
 
+    <material name="green">
+        <color rgba="0 1 0 1" />
+    </material>
+
     <!-- BASE LINK -->
 
     <link name="base_link">
@@ -55,7 +59,7 @@
             <geometry>
                 <box size="0.36 0.36 0.4"/>
             </geometry>
-            <material name="white"/>
+            <material name="green"/>
         </visual>
         <collision>
             <origin xyz="0.18 0 0.2"/>
