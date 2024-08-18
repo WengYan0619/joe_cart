@@ -21,7 +21,7 @@ class ClientNode(Node):
         self.declare_parameter('target_fps', 15)
         self.declare_parameter('frame_width', 640)
         self.declare_parameter('frame_height', 480)
-        self.declare_parameter('camera_index', 13)
+        self.declare_parameter('camera_index', 0)
         self.declare_parameter('send_every_nth_frame', 3)
         self.declare_parameter('confidence_threshold', 0.75)
 
