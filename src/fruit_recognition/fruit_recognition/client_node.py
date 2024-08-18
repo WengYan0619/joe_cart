@@ -132,7 +132,7 @@ class ClientNode(Node):
                 filtered_detections = [d for d in full_detections if d['confidence'] > self.confidence_threshold]
                 
                 # Publish RFID Identifier
-                published_classes = set()
+                published_classes = self.product_id_mapping
                 for detection in filtered_detections:
                     if detection['class'] not in published_classes:
                         rfid_identifier = self.product_id_mapping.get(detection['class'], 'UNKNOWN')
