@@ -16,7 +16,7 @@ class ClientNode(Node):
         super().__init__('client_node')
         
         # Declare and get parameters
-        self.declare_parameter('server_ip', '192.168.137.151')
+        self.declare_parameter('server_ip', '10.42.0.106')
         self.declare_parameter('server_port', 5000)
         self.declare_parameter('target_fps', 15)
         self.declare_parameter('frame_width', 640)
