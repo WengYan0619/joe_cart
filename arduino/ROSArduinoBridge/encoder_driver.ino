@@ -51,6 +51,8 @@
   
   	right_enc_pos += ENC_STATES[(enc_last & 0x0f)];
   }
+
+  
   
   /* Wrap the encoder reading function */
   long readEncoder(int i) {

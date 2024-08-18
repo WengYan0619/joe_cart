@@ -134,14 +134,26 @@ hardware_interface::return_type DiffDriveArduino::write(
     return return_type::ERROR;
   }
 
-  arduino_.setMotorValues(l_wheel_.cmd / l_wheel_.rads_per_count / cfg_.loop_rate, r_wheel_.cmd / r_wheel_.rads_per_count / cfg_.loop_rate);
+  // Calculate command values for Arduino
+  double l_wheel_cmd_to_arduino = l_wheel_.cmd / l_wheel_.rads_per_count / cfg_.loop_rate;
+  double r_wheel_cmd_to_arduino = r_wheel_.cmd / r_wheel_.rads_per_count / cfg_.loop_rate;
 
+  l_wheel_cmd_to_arduino > 105 ? 105 : l_wheel_cmd_to_arduino;
+  r_wheel_cmd_to_arduino > 105 ? 105 : r_wheel_cmd_to_arduino;
 
+  // Log the command values
+  if (l_wheel_cmd_to_arduino != 0 || r_wheel_cmd_to_arduino != 0) {
+    RCLCPP_INFO(
+      logger_,
+      "Sending commands to Arduino - Left: %.2f, Right: %.2f",
+      l_wheel_cmd_to_arduino,
+      r_wheel_cmd_to_arduino
+    );
+  }  
 
+  arduino_.setMotorValues(l_wheel_cmd_to_arduino, r_wheel_cmd_to_arduino);
 
   return return_type::OK;
-
-
   
 }
 

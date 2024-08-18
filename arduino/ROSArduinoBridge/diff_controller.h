@@ -35,9 +35,9 @@ typedef struct
 SetPointInfo leftPID, rightPID;
 
 /* PID Parameters */
-int Kp = 20;
-int Kd = 10;
-double Ki = 0.1;
+int Kp = 7;
+int Kd = 7;
+double Ki = 0.001;
 int Ko = 100;
 
 unsigned char moving = 0; // is the base in motion?
@@ -139,7 +139,7 @@ void doPID(SetPointInfo *p, char side)
   // output = (Kp * Perror + Kd * (Perror - p->PrevErr) + Ki * p->Ierror) / Ko;
   //  p->PrevErr = Perror;
 
-  double leftMotorKpMultiplier = 2.1;
+  double leftMotorKpMultiplier = 1.8;
 
   long output_temp;
 
@@ -214,9 +214,9 @@ void doPID(SetPointInfo *p, char side)
   Serial3.println(output);
 #endif
 
-  double leftMotorPWMMultiplier = 1.6;
+  double leftMotorPWMMultiplier = 1;
 
-  if (side == 'L' && output < 35)
+  if (side == 'L' /*&& output < 0*/)
   {
     output = output * leftMotorPWMMultiplier;
 #ifdef PRINT_ENABLE_SERIAL
