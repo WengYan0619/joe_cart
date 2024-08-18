@@ -131,20 +131,19 @@ class ClientNode(Node):
                 # Process and simplify the received data
                 filtered_detections = [d for d in full_detections if d['confidence'] > self.confidence_threshold]
                 
-                rfid_identifier = self.product_id_mapping.get(detection['class'], 'UNKNOWN')
+                
                 # Publish RFID Identifier
                 published_classes = self.product_id_mapping
                 for detection in filtered_detections:
-                    if detection['class'] not in published_classes:
-                        rfid_identifier = self.product_id_mapping.get(detection['class'], 'UNKNOWN')
+                    
+                    rfid_identifier = self.product_id_mapping.get(detection['class'], 'UNKNOWN')
 
-                    else:  
-                        # Publish RFID identifier to rfid_data
-                        rfid_msg = String()
-                        rfid_msg.data = f"ADD: {rfid_identifier}"
-                        self.rfid_publisher.publish(rfid_msg)
+                    # Publish RFID identifier to rfid_data
+                    rfid_msg = String()
+                    rfid_msg.data = f"ADD: {rfid_identifier}"
+                    self.rfid_publisher.publish(rfid_msg)
 
-                        self.get_logger().info(f"Published: 'ADD: {rfid_identifier}' to rfid_data")
+                    self.get_logger().info(f"Published: 'ADD: {rfid_identifier}' to rfid_data")
                     
             except Exception as e:
                 self.get_logger().error(f"Error processing detection results: {str(e)}")
