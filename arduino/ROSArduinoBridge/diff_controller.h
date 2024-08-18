@@ -5,7 +5,7 @@
   http://vanadium-ros-pkg.googlecode.com/svn/trunk/arbotix/
 */
 
-#define PRINT_ENABLE_SERIAL
+#undef PRINT_ENABLE_SERIAL
 
 /* PID setpoint info For a Motor */
 typedef struct
@@ -139,7 +139,7 @@ void doPID(SetPointInfo *p, char side)
   // output = (Kp * Perror + Kd * (Perror - p->PrevErr) + Ki * p->Ierror) / Ko;
   //  p->PrevErr = Perror;
 
-  double leftMotorKpMultiplier = 1.4;
+  double leftMotorKpMultiplier = 2.1;
 
   long output_temp;
 
@@ -214,7 +214,7 @@ void doPID(SetPointInfo *p, char side)
   Serial3.println(output);
 #endif
 
-  double leftMotorPWMMultiplier = 1;
+  double leftMotorPWMMultiplier = 1.6;
 
   if (side == 'L' && output < 35)
   {

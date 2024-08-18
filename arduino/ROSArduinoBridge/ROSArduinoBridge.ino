@@ -85,7 +85,7 @@
 #endif
 
 /* Include the current sensor header file */
-#include current_sensor.h
+#include "current_sensor.h"
 
 /* Include definition of serial commands */
 #include "commands.h"
@@ -383,10 +383,18 @@ void loop() {
 #endif
 
 #ifdef USE_CURRENT_SENSOR
-  if (isCurrentExceeded()) {
-    stopMotors();
-    moving = 0;
-    delay(3000);
+  static unsigned long lastCurrentCheck = 0;
+  unsigned long currentTime = millis();
+  
+  if (currentTime - lastCurrentCheck >= 100) {  // Check every 0.1 seconds (100 milliseconds)
+    lastCurrentCheck = currentTime;
+    
+    if (isCurrentExceeded()) {
+      stopMotors();
+      moving = 0;
+      delay(3000);
+    }
   }
+#endif
 }
 
