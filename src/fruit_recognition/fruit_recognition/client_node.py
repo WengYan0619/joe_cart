@@ -13,6 +13,7 @@ import numpy as np
 
 class ClientNode(Node):
     def __init__(self):
+        self.orange_added_class = 0
         super().__init__('client_node')
         
         # Declare and get parameters
@@ -133,11 +134,13 @@ class ClientNode(Node):
                 # Process and simplify the received data
                 filtered_detections = [d for d in full_detections if d['confidence'] > self.confidence_threshold]
                 
+
+                global orange_added_class
                 
                 # Publish RFID Identifier
                 published_classes = set()
                 for detection in filtered_detections:
-                    if detection['class'] not in published_classes:
+                    if self.orange_added_class == 0:
                         published_classes.add(detection['class'])
                     
                         rfid_identifier = self.product_id_mapping.get(detection['class'], 'UNKNOWN')
@@ -148,6 +151,7 @@ class ClientNode(Node):
                         self.rfid_publisher.publish(rfid_msg)
 
                         self.get_logger().info(f"Published: 'ADD: {rfid_identifier}' to rfid_data")
+                        self.orange_added_class += 1
                     
                     else:
                         self.get_logger().info("Item exists")
