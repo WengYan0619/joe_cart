@@ -9,11 +9,19 @@
 MFRC522 mfrc522(SS_PIN, RST_PIN);
 
 void setup() {
-  pinMode(BUTTON_PIN,INPUT); 
+  pinMode(BUTTON_PIN, INPUT_PULLUP);  // Changed to INPUT_PULLUP
 
   Serial.begin(9600);
+  while (!Serial);  // Wait for serial port to connect
   SPI.begin();
   mfrc522.PCD_Init();
+  
+  // Check if MFRC522 is initialized correctly
+  if (!mfrc522.PCD_PerformSelfTest()) {
+    Serial.println("MFRC522 initialization failed. Check wiring.");
+    while (1);  // Halt if initialization failed
+  }
+  
   delay(4);
   mfrc522.PCD_DumpVersionToSerial();
 
@@ -22,8 +30,14 @@ void setup() {
 
 void loop() {
   int Button_State = digitalRead(BUTTON_PIN);
-  //delay(500);
-  //Serial.print(Button_State);
+  // Serial.print("Button State: ");
+  // Serial.println(Button_State);
+
+  while (!mfrc522.PCD_PerformSelfTest()) {
+    Serial.println("ERROR");
+    delay(500);  // Halt if initialization failed
+  }
+
   if (!mfrc522.PICC_IsNewCardPresent()) {
     return;
   }
@@ -50,5 +64,5 @@ void loop() {
     Serial.println(content); // Print the complete UID as a hex string with REMOVE prefix
   }
 
-  delay(500);
+  delay(1500);
 }

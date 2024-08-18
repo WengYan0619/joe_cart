@@ -1,0 +1,5 @@
+{
+    "port": "/dev/ttyACM2",
+    "board": "arduino:avr:uno",
+    "sketch": "rfid_joecart.ino"
+}
