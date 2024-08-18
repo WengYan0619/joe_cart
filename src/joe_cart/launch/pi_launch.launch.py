@@ -73,6 +73,12 @@ def generate_launch_description():
         )
     )
 
+    lidar = IncludeLaunchDescription(
+                PythonLaunchDescriptionSource([os.path.join(
+                    get_package_share_directory(package_name),'launch','ld06.launch.py'
+                )]), 
+    )
+
     # Launch them all!
     return LaunchDescription([
         rsp,
@@ -80,4 +86,5 @@ def generate_launch_description():
         delayed_diff_drive_spawner,
         delayed_joint_broad_spawner,
         twist_mux,
+        lidar
     ])
