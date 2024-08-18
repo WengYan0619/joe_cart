@@ -16,19 +16,16 @@ from launch_ros.actions import Node
 
 def generate_launch_description():
 
-    # Include the robot_state_publisher launch file, provided by our own package. Force sim time to be enabled
-    # !!! MAKE SURE YOU SET THE PACKAGE NAME CORRECTLY !!!
+    package_name='joe_cart' 
 
-    package_name='joe_cart' #<--- CHANGE ME
-
-    map_yaml_path = os.path.join(get_package_share_directory(package_name), 'Actual_map.yaml')
+    map_yaml_path = os.path.join(get_package_share_directory(package_name), 'maps', 'block_e_lab.yaml')
 
     map_server = Node(
         package='nav2_map_server',
         executable='map_server',
         name='map_server',
         output='screen',
-        parameters=[{'use_sim_time': True},
+        parameters=[{'use_sim_time': False},
                     {'yaml_filename': map_yaml_path}]
     )
 
@@ -41,40 +38,21 @@ def generate_launch_description():
                     {'set_initial_pose': True},]
     )
 
-    # Delayed start for AMCL lifecycle bringup
-    delayed_amcl = TimerAction(
-        period=3.0,
-        actions=[
-            Node(
-                package='nav2_lifecycle_manager',
-                executable='lifecycle_manager',
-                name='lifecycle_manager_localization',
-                output='screen',
-                parameters=[
-                    {'use_sim_time': True},
+    # Lifecycle management for AMCL and map_server
+    lifecycle_manager = Node(
+        package='nav2_lifecycle_manager',
+        executable='lifecycle_manager',
+        name='lifecycle_manager_localization',
+        output='screen',
+        parameters=[{'use_sim_time': False},
                     {'autostart': True},
-                    {'node_names': ['amcl']}
-                ]
-            )
-        ]
+                    {'node_names': ['map_server', 'amcl']}]
     )
 
-    # Delayed start for map_server lifecycle bringup
-    delayed_map_server = TimerAction(
-        period=2.0,
-        actions=[
-            Node(
-                package='nav2_lifecycle_manager',
-                executable='lifecycle_manager',
-                name='map_server',
-                output='screen',
-                parameters=[
-                    {'use_sim_time': True},
-                    {'autostart': True},
-                    {'node_names': ['map_server']}
-                ]
-            )
-        ]
+    # Delayed start for lifecycle manager
+    lifecycle_manager_timer = TimerAction(
+        period=5.0,
+        actions=[lifecycle_manager]
     )
 
     rosbridge_server = Node(
@@ -82,16 +60,18 @@ def generate_launch_description():
         executable='rosbridge_websocket',
         name='rosbridge_server',
         output='screen',
-        parameters=[{'use_sim_time': True}]
+        parameters=[{'use_sim_time': False}]
     )
+
+    rviz_config = os.path.join(get_package_share_directory(package_name), 'config', 'remote_pc.rviz')
 
     rviz2 = Node(
         package='rviz2',
         executable='rviz2',
         name='rviz2',
         output='screen',
-        # arguments=['-d', '/home/zawl/joe_cart/src/joe_cart/config/sprint.rviz'],
-        parameters=[{'use_sim_time': True}]
+        arguments=['-d', rviz_config],
+        parameters=[{'use_sim_time': False}]
     )
 
     nav2 = IncludeLaunchDescription(
@@ -100,13 +80,39 @@ def generate_launch_description():
                 )]), launch_arguments={'use_sim_time': 'false'}.items()
     )
 
+    joy_params = os.path.join(get_package_share_directory('joe_cart'),'config','joystick.yaml')
+
+    joy_node = Node(
+            package='joy',
+            executable='joy_node',
+            parameters=[joy_params, {'use_sim_time': False}],
+         )
+
+    teleop_node = Node(
+            package='teleop_twist_joy',
+            executable='teleop_node',
+            name='teleop_node',
+            parameters=[joy_params, {'use_sim_time': False}],
+            remappings=[('/cmd_vel','/cmd_vel_joy')]
+         )
+
+    start_other_nodes = RegisterEventHandler(
+        event_handler=OnProcessStart(
+            target_action=rviz2,
+            on_start=[
+                map_server, 
+                amcl,
+                lifecycle_manager_timer,
+                rosbridge_server,
+                nav2,
+                joy_node,
+                teleop_node
+            ]
+        )
+    )
+
     # Launch them all!
     return LaunchDescription([
-        map_server,
-        amcl,
-        delayed_amcl,
-        delayed_map_server,
-        rosbridge_server,
         rviz2,
-        nav2
+        start_other_nodes
     ])
