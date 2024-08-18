@@ -79,6 +79,13 @@ def generate_launch_description():
                 )]), 
     )
 
+    rfid_reader = Node(
+        package='my_rfid_pkg',
+        executable='rfid_reader',
+        name='rfid_reader',
+        output='screen'
+    )
+
     # Launch them all!
     return LaunchDescription([
         rsp,
@@ -86,5 +93,6 @@ def generate_launch_description():
         delayed_diff_drive_spawner,
         delayed_joint_broad_spawner,
         twist_mux,
-        lidar
+        lidar,
+        rfid_reader
     ])

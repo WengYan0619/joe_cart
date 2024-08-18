@@ -9,7 +9,7 @@ class RFIDReader(Node):
         super().__init__('rfid_reader')
         self.publisher_ = self.create_publisher(String, 'rfid_data', 10)
         try:
-            self.serial_port = serial.Serial('/dev/ttyACM1', 9600, timeout=2)
+            self.serial_port = serial.Serial('/dev/ttyACM2', 9600, timeout=2)
         except serial.SerialException:
             self.get_logger().error("Serial port not available")
             sys.exit(1)
