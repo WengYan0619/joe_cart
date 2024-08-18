@@ -47,6 +47,8 @@ class ClientNode(Node):
             'orange': '8367d902',
             'banana': '349ab4df'
         }
+        
+        
 
         # ROS Publisher for simplified YOLO results
         self.rfid_publisher = self.create_publisher(String, 'rfid_data', 10)
@@ -135,15 +137,21 @@ class ClientNode(Node):
                 # Publish RFID Identifier
                 published_classes = set()
                 for detection in filtered_detections:
+                    if detection['class'] not in published_classes:
+                        published_classes.add(detection['class'])
                     
-                    rfid_identifier = self.product_id_mapping.get(detection['class'], 'UNKNOWN')
+                        rfid_identifier = self.product_id_mapping.get(detection['class'], 'UNKNOWN')
 
-                    # Publish RFID identifier to rfid_data
-                    rfid_msg = String()
-                    rfid_msg.data = f"ADD: {rfid_identifier}"
-                    self.rfid_publisher.publish(rfid_msg)
+                        # Publish RFID identifier to rfid_data
+                        rfid_msg = String()
+                        rfid_msg.data = f"ADD: {rfid_identifier}"
+                        self.rfid_publisher.publish(rfid_msg)
 
-                    self.get_logger().info(f"Published: 'ADD: {rfid_identifier}' to rfid_data")
+                        self.get_logger().info(f"Published: 'ADD: {rfid_identifier}' to rfid_data")
+                    
+                    else:
+                        self.get_logger().info("Item exists")
+
                     
             except Exception as e:
                 self.get_logger().error(f"Error processing detection results: {str(e)}")
