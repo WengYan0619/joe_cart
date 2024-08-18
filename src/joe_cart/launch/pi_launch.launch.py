@@ -86,6 +86,13 @@ def generate_launch_description():
         output='screen'
     )
 
+    rosbridge = Node(
+        package='rosbridge_server',
+        executable='rosbridge_websocket',
+        name='rosbridge',
+        output='screen'
+    )
+
     # Launch them all!
     return LaunchDescription([
         rsp,
@@ -94,5 +101,6 @@ def generate_launch_description():
         delayed_joint_broad_spawner,
         twist_mux,
         lidar,
-        rfid_reader
+        rfid_reader,
+        rosbridge
     ])
