@@ -1,0 +1,14 @@
+{
+    "python.autoComplete.extraPaths": [
+        "/home/vania/joe_cart/install/my_rfid_pkg/lib/python3.10/site-packages",
+        "/home/vania/joe_cart/install/fruit_recognition/lib/python3.10/site-packages",
+        "/opt/ros/humble/lib/python3.10/site-packages",
+        "/opt/ros/humble/local/lib/python3.10/dist-packages"
+    ],
+    "python.analysis.extraPaths": [
+        "/home/vania/joe_cart/install/my_rfid_pkg/lib/python3.10/site-packages",
+        "/home/vania/joe_cart/install/fruit_recognition/lib/python3.10/site-packages",
+        "/opt/ros/humble/lib/python3.10/site-packages",
+        "/opt/ros/humble/local/lib/python3.10/dist-packages"
+    ]
+}
