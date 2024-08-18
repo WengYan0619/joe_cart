@@ -47,14 +47,9 @@ class ClientNode(Node):
             'orange': '8367d902',
             'banana': '349ab4df'
         }
-        
-        
 
         # ROS Publisher for simplified YOLO results
         self.rfid_publisher = self.create_publisher(String, 'rfid_data', 10)
-        
-        self.current_objects = set()
-        self.frames_without_object = {}
         
         self.receive_thread = threading.Thread(target=self.receive_results, daemon=True)
         self.receive_thread.start()
@@ -117,56 +112,42 @@ class ClientNode(Node):
             self.get_logger().error(f"Error sending frame: {e}")
             return False
 
-
     def receive_results(self):
-    FRAMES_TO_CONSIDER_REMOVED = 10  # Adjust this value as needed
+        while rclpy.ok():
+            if self.socket is None:
+                time.sleep(1)
+                continue
+            try:
+                # Receive full YOLO detection data from sender_node
+                msg_size = struct.unpack("L", self.socket.recv(struct.calcsize("L")))[0]
+                data = b""
+                while len(data) < msg_size:
+                    packet = self.socket.recv(min(msg_size - len(data), 4096))
+                    if not packet:
+                        break
+                    data += packet
+                full_detections = json.loads(data.decode('utf-8'))
+                
+                # Process and simplify the received data
+                filtered_detections = [d for d in full_detections if d['confidence'] > self.confidence_threshold]
+                
+                
+                # Publish RFID Identifier
+                published_classes = set()
+                for detection in filtered_detections:
+                    
+                    rfid_identifier = self.product_id_mapping.get(detection['class'], 'UNKNOWN')
 
-    while rclpy.ok():
-        if self.socket is None:
-            time.sleep(1)
-            continue
-        try:
-            # Receive full YOLO detection data from sender_node
-            msg_size = struct.unpack("L", self.socket.recv(struct.calcsize("L")))[0]
-            data = b""
-            while len(data) < msg_size:
-                packet = self.socket.recv(min(msg_size - len(data), 4096))
-                if not packet:
-                    break
-            	data += packet
-            full_detections = json.loads(data.decode('utf-8'))
-            
-            # Process and simplify the received data
-            filtered_detections = [d for d in full_detections if d['confidence'] > self.confidence_threshold]
-            
-            detected_classes = set(d['class'].lower() for d in filtered_detections)
-            
-            # Check for new objects and publish their RFID identifiers
-            new_objects = detected_classes - self.current_objects
-            for obj in new_objects:
-                rfid_identifier = self.product_id_mapping.get(obj, 'UNKNOWN')
-                rfid_msg = String()
-                rfid_msg.data = f"ADD: {rfid_identifier}"
-                self.rfid_publisher.publish(rfid_msg)
-                self.get_logger().info(f"Published: 'ADD: {rfid_identifier}' to rfid_data")
-            
-            # Update current objects
-            self.current_objects.update(new_objects)
-            
-            # Check for removed objects
-            for obj in list(self.current_objects):  # Use list() to avoid modifying set during iteration
-                if obj not in detected_classes:
-                    self.frames_without_object[obj] = self.frames_without_object.get(obj, 0) + 1
-                    if self.frames_without_object[obj] >= FRAMES_TO_CONSIDER_REMOVED:
-                        self.current_objects.remove(obj)
-                        del self.frames_without_object[obj]
-                        self.get_logger().info(f"Removed {obj} from tracking")
-                else:
-                    self.frames_without_object[obj] = 0
+                    # Publish RFID identifier to rfid_data
+                    rfid_msg = String()
+                    rfid_msg.data = f"ADD: {rfid_identifier}"
+                    self.rfid_publisher.publish(rfid_msg)
 
-        except Exception as e:
-            self.get_logger().error(f"Error processing detection results: {str(e)}")
-            time.sleep(1)
+                    self.get_logger().info(f"Published: 'ADD: {rfid_identifier}' to rfid_data")
+                    
+            except Exception as e:
+                self.get_logger().error(f"Error processing detection results: {str(e)}")
+                time.sleep(1)
 
     def cleanup(self):
         if self.camera is not None and self.camera.isOpened():
