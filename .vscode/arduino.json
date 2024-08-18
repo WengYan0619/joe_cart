@@ -1,5 +1,5 @@
 {
     "board": "arduino:avr:uno",
     "port": "/dev/ttyACM0",
-    "sketch": "arduino/ROSArduinoBridge/ROSArduinoBridge.ino"
+    "sketch": "arduino/rfid_joecart/sketch_joe.ino"
 }

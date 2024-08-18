@@ -1,5 +1,3 @@
-#include "user_config.h" // It must be located above ros2arduino.h.
-#include <ros2arduino.h>
 #include <inttypes.h>  // Force include here
 #include <SPI.h>
 #include <MFRC522.h>
@@ -11,10 +9,13 @@
 MFRC522 mfrc522(SS_PIN, RST_PIN);
 
 void setup() {
+  pinMode(BUTTON_PIN,INPUT); 
+
   Serial.begin(9600);
   SPI.begin();
   mfrc522.PCD_Init();
-  pinMode(BUTTON_PIN,INPUT); 
+  delay(4);
+  mfrc522.PCD_DumpVersionToSerial();
 
   Serial.println("Place your card near the reader...");
 }
