@@ -41,17 +41,21 @@ class ClientNode(Node):
         self.connect_to_server()
         self.open_camera()
 
-        # ROS Publisher for YOLO results
-        self.detection_publisher = self.create_publisher(String, 'scene_change_detections', 10)
+        # Add product ID mapping
+        self.product_id_mapping = {
+            'Apple': '43c21d2a',
+            'Orange': '8367d902',
+            'Banana': '349ab4df'
+        }
+
+        # ROS Publisher for simplified YOLO results
+        self.rfid_publisher = self.create_publisher(String, 'rfid_data', 10)
         
         self.receive_thread = threading.Thread(target=self.receive_results, daemon=True)
         self.receive_thread.start()
 
         self.send_thread = threading.Thread(target=self.send_frames, daemon=True)
         self.send_thread.start()
-
-        # Initialize set to keep track of current scene detections
-        self.current_scene_detections = set()
         
         self.get_logger().info('Client Node has been started')
 
@@ -93,7 +97,7 @@ class ClientNode(Node):
                     self.get_logger().warn("Failed to send frame, attempting to reconnect...")
                     self.connect_to_server()
             
-            time.sleep(0.01)  # Small delay to prevent busy-waiting
+            time.sleep(1.0 / self.target_fps)  # Adjust delay based on target FPS
 
     def send_frame(self, frame):
         if self.socket is None:
@@ -114,6 +118,7 @@ class ClientNode(Node):
                 time.sleep(1)
                 continue
             try:
+                # Receive full YOLO detection data from sender_node
                 msg_size = struct.unpack("L", self.socket.recv(struct.calcsize("L")))[0]
                 data = b""
                 while len(data) < msg_size:
@@ -121,34 +126,27 @@ class ClientNode(Node):
                     if not packet:
                         break
                     data += packet
-                detections = json.loads(data.decode('utf-8'))
+                full_detections = json.loads(data.decode('utf-8'))
                 
-                # Filter detections based on confidence threshold
-                filtered_detections = [d for d in detections if d['confidence'] > self.confidence_threshold]
+                # Process and simplify the received data
+                filtered_detections = [d for d in full_detections if d['confidence'] > self.confidence_threshold]
                 
-                # Create a set of detected classes
-                new_scene_detections = set(d['class'] for d in filtered_detections)
-
-                # Check if the scene has changed
-                if new_scene_detections != self.current_scene_detections:
-                    self.current_scene_detections = new_scene_detections
-                    
-                    # Publish only the first detection of each class
-                    unique_detections = []
-                    published_classes = set()
-                    for detection in filtered_detections:
-                        if detection['class'] not in published_classes:
-                            unique_detections.append(detection)
-                            published_classes.add(detection['class'])
-                    
-                    # ROS Publication
-                    detection_msg = String()
-                    detection_msg.data = json.dumps(unique_detections)
-                    self.detection_publisher.publish(detection_msg)
-                    self.get_logger().info(f"Published new scene detections: {unique_detections}")
+                # Publish RFID Identifier
+                published_classes = set()
+                for detection in filtered_detections:
+                    if detection['class'] not in published_classes:
+                        rfid_identifier = self.product_id_mapping.get(detection['class'], 'UNKNOWN')
+                        
+                        
+                        # Publish RFID identifier to rfid_data
+                        rfid_msg = String()
+                        rfid_msg.data = f"ADD: {rfid_identifier}"
+                        self.rfid_publisher.publish(rfid_msg)
+                        
+                        self.get_logger().info(f"Published: 'ADD: {rfid_identifier}' to rfid_data")
 
             except Exception as e:
-                self.get_logger().error(f"Error receiving detection results: {str(e)}")
+                self.get_logger().error(f"Error processing detection results: {str(e)}")
                 time.sleep(1)
 
     def cleanup(self):
