@@ -1,5 +1,5 @@
 {
     "board": "arduino:avr:uno",
-    "port": "/dev/ttyACM0",
+    "port": "/dev/ttyACM2",
     "sketch": "arduino/ROSArduinoBridge/ROSArduinoBridge.ino"
 }

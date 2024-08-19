@@ -1,6 +1,228 @@
 {
    "widgets": [
       {
+         "type": "chart",
+         "gridPos": {
+            "h": 6,
+            "w": 6,
+            "x": 0,
+            "y": 0
+         },
+         "series": [
+            {
+               "name": "PID_output_L",
+               "sourceNames": [
+                  "PID_output_L"
+               ],
+               "formula": "",
+               "options": {
+                  "_serie": "PID_output_L",
+                  "stroke": "rgba(231,76,60,1)",
+                  "fill": "rgba(231,76,60,0.1)"
+               },
+               "type": "number"
+            },
+            {
+               "name": "Kp_term_L",
+               "sourceNames": [
+                  "Kp_term_L"
+               ],
+               "formula": "",
+               "options": {
+                  "_serie": "Kp_term_L",
+                  "stroke": "rgba(52,152,219,1)",
+                  "fill": "rgba(52,152,219,0.1)"
+               },
+               "type": "number"
+            },
+            {
+               "name": "Kd_term_L",
+               "sourceNames": [
+                  "Kd_term_L"
+               ],
+               "formula": "",
+               "options": {
+                  "_serie": "Kd_term_L",
+                  "stroke": "rgba(46,204,113,1)",
+                  "fill": "rgba(46,204,113,0.1)"
+               },
+               "type": "number"
+            },
+            {
+               "name": "ITerm_L",
+               "sourceNames": [
+                  "ITerm_L"
+               ],
+               "formula": "",
+               "options": {
+                  "_serie": "ITerm_L",
+                  "stroke": "rgba(155,89,182,1)",
+                  "fill": "rgba(155,89,182,0.1)"
+               },
+               "type": "number"
+            }
+         ]
+      },
+      {
+         "type": "chart",
+         "gridPos": {
+            "h": 6,
+            "w": 6,
+            "x": 0,
+            "y": 0
+         },
+         "series": [
+            {
+               "name": "PID_output_R",
+               "sourceNames": [
+                  "PID_output_R"
+               ],
+               "formula": "",
+               "options": {
+                  "_serie": "PID_output_R",
+                  "stroke": "rgba(231,76,60,1)",
+                  "fill": "rgba(231,76,60,0.1)"
+               },
+               "type": "number"
+            },
+            {
+               "name": "Kp_term_R",
+               "sourceNames": [
+                  "Kp_term_R"
+               ],
+               "formula": "",
+               "options": {
+                  "_serie": "Kp_term_R",
+                  "stroke": "rgba(52,152,219,1)",
+                  "fill": "rgba(52,152,219,0.1)"
+               },
+               "type": "number"
+            },
+            {
+               "name": "Kd_term_R",
+               "sourceNames": [
+                  "Kd_term_R"
+               ],
+               "formula": "",
+               "options": {
+                  "_serie": "Kd_term_R",
+                  "stroke": "rgba(46,204,113,1)",
+                  "fill": "rgba(46,204,113,0.1)"
+               },
+               "type": "number"
+            },
+            {
+               "name": "ITerm_R",
+               "sourceNames": [
+                  "ITerm_R"
+               ],
+               "formula": "",
+               "options": {
+                  "_serie": "ITerm_R",
+                  "stroke": "rgba(155,89,182,1)",
+                  "fill": "rgba(155,89,182,0.1)"
+               },
+               "type": "number"
+            }
+         ]
+      },
+      {
+         "type": "single_value_number",
+         "gridPos": {
+            "h": 2,
+            "w": 3,
+            "x": 0,
+            "y": 0
+         },
+         "series": [
+            {
+               "name": "ITerm_L",
+               "sourceNames": [
+                  "ITerm_L"
+               ],
+               "formula": "",
+               "options": {
+                  "stroke": "rgba(231,76,60,1)",
+                  "fill": "rgba(231,76,60,0.1)"
+               },
+               "type": "number"
+            }
+         ],
+         "precision_mode": 0
+      },
+      {
+         "type": "single_value_number",
+         "gridPos": {
+            "h": 2,
+            "w": 3,
+            "x": 0,
+            "y": 0
+         },
+         "series": [
+            {
+               "name": "ITerm_R",
+               "sourceNames": [
+                  "ITerm_R"
+               ],
+               "formula": "",
+               "options": {
+                  "stroke": "rgba(231,76,60,1)",
+                  "fill": "rgba(231,76,60,0.1)"
+               },
+               "type": "number"
+            }
+         ],
+         "precision_mode": 0
+      },
+      {
+         "type": "single_value_number",
+         "gridPos": {
+            "h": 2,
+            "w": 3,
+            "x": 0,
+            "y": 0
+         },
+         "series": [
+            {
+               "name": "Kd_term_L",
+               "sourceNames": [
+                  "Kd_term_L"
+               ],
+               "formula": "",
+               "options": {
+                  "stroke": "rgba(231,76,60,1)",
+                  "fill": "rgba(231,76,60,0.1)"
+               },
+               "type": "number"
+            }
+         ],
+         "precision_mode": 0
+      },
+      {
+         "type": "single_value_number",
+         "gridPos": {
+            "h": 2,
+            "w": 3,
+            "x": 0,
+            "y": 0
+         },
+         "series": [
+            {
+               "name": "Kd_term_R",
+               "sourceNames": [
+                  "Kd_term_R"
+               ],
+               "formula": "",
+               "options": {
+                  "stroke": "rgba(231,76,60,1)",
+                  "fill": "rgba(231,76,60,0.1)"
+               },
+               "type": "number"
+            }
+         ],
+         "precision_mode": 0
+      },
+      {
          "type": "single_value_number",
          "gridPos": {
             "h": 2,
@@ -70,7 +292,7 @@
                "type": "number"
             }
          ],
-         "precision_mode": 0
+         "precision_mode": 2
       },
       {
          "type": "single_value_number",
@@ -185,8 +407,8 @@
                "formula": "",
                "options": {
                   "_serie": "Input_R",
-                  "stroke": "rgba(52,152,219,1)",
-                  "fill": "rgba(52,152,219,0.1)"
+                  "stroke": "rgba(231,76,60,1)",
+                  "fill": "rgba(231,76,60,0.1)"
                },
                "type": "number"
             },
@@ -198,8 +420,8 @@
                "formula": "",
                "options": {
                   "_serie": "Input_L",
-                  "stroke": "rgba(46,204,113,1)",
-                  "fill": "rgba(46,204,113,0.1)"
+                  "stroke": "rgba(52,152,219,1)",
+                  "fill": "rgba(52,152,219,0.1)"
                },
                "type": "number"
             },
@@ -211,8 +433,8 @@
                "formula": "",
                "options": {
                   "_serie": "TargetTicks_R",
-                  "stroke": "rgba(155,89,182,1)",
-                  "fill": "rgba(155,89,182,0.1)"
+                  "stroke": "rgba(46,204,113,1)",
+                  "fill": "rgba(46,204,113,0.1)"
                },
                "type": "number"
             },
@@ -224,8 +446,8 @@
                "formula": "",
                "options": {
                   "_serie": "TargetTicks_L",
-                  "stroke": "rgba(241,196,15,1)",
-                  "fill": "rgba(241,196,15,0.1)"
+                  "stroke": "rgba(155,89,182,1)",
+                  "fill": "rgba(155,89,182,0.1)"
                },
                "type": "number"
             }
@@ -304,7 +526,55 @@
                "type": "number"
             }
          ]
+      },
+      {
+         "type": "chart",
+         "gridPos": {
+            "h": 6,
+            "w": 6,
+            "x": 0,
+            "y": 0
+         },
+         "series": [
+            {
+               "name": "Kp_term_R",
+               "sourceNames": [
+                  "Kp_term_R"
+               ],
+               "formula": "",
+               "options": {
+                  "_serie": "Kp_term_R",
+                  "stroke": "rgba(231,76,60,1)",
+                  "fill": "rgba(231,76,60,0.1)"
+               },
+               "type": "number"
+            }
+         ]
+      },
+      {
+         "type": "chart",
+         "gridPos": {
+            "h": 6,
+            "w": 6,
+            "x": 0,
+            "y": 0
+         },
+         "series": [
+            {
+               "name": "Kp_term_L",
+               "sourceNames": [
+                  "Kp_term_L"
+               ],
+               "formula": "",
+               "options": {
+                  "_serie": "Kp_term_L",
+                  "stroke": "rgba(231,76,60,1)",
+                  "fill": "rgba(231,76,60,0.1)"
+               },
+               "type": "number"
+            }
+         ]
       }
    ],
-   "viewDuration": "5"
+   "viewDuration": "30"
 }

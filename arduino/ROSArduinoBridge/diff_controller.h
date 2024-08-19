@@ -5,7 +5,7 @@
   http://vanadium-ros-pkg.googlecode.com/svn/trunk/arbotix/
 */
 
-#undef PRINT_ENABLE_SERIAL
+#define PRINT_ENABLE_SERIAL
 
 /* PID setpoint info For a Motor */
 typedef struct
@@ -35,9 +35,10 @@ typedef struct
 SetPointInfo leftPID, rightPID;
 
 /* PID Parameters */
-int Kp = 7;
-int Kd = 1;
-double Ki = 0.008;
+int Kp_right = 20;
+int Kp_left = 25;
+int Kd = 100;
+double Ki = 0.01;
 int Ko = 100;
 
 unsigned char moving = 0; // is the base in motion?
@@ -84,9 +85,9 @@ void doPID(SetPointInfo *p, char side)
   if (side == 'L')
     Serial.print(">Input_L:");
   Serial.println(input);
-  if(side == 'R')
+  if (side == 'R')
     Serial.print(">TargetTicks_R: ");
-  if(side == 'L')
+  if (side == 'L')
     Serial.print(">TargetTicks_L: ");
   Serial.println(p->TargetTicksPerFrame);
   // Serial.print(" Perror: ");
@@ -94,7 +95,7 @@ void doPID(SetPointInfo *p, char side)
   if (side == 'R')
   {
     Serial.print(">Kp:");
-    Serial.println(Kp);
+    Serial.println(Kp_right);
     Serial.print(">Kd: ");
     Serial.println(Kd);
     Serial.print(">Ki: ");
@@ -145,13 +146,14 @@ void doPID(SetPointInfo *p, char side)
 
   if (side == 'L')
   {
-    double Kp_left = Kp * leftMotorKpMultiplier;
+    // double Kp_left = Kp * leftMotorKpMultiplier;
 #ifdef PRINT_ENABLE_SERIAL
     Serial.print(">leftMotorKpMultiplier:");
     Serial.println(leftMotorKpMultiplier);
 
     Serial.print(">Kp_left:");
     Serial.println(Kp_left);
+
 #endif
 
 #ifdef PRINT_ENABLE_SERIAL3
@@ -163,10 +165,31 @@ void doPID(SetPointInfo *p, char side)
 #endif
 
     output_temp = (Kp_left * Perror - Kd * (input - p->PrevInput) + static_cast<int>(p->ITerm));
+
+    #ifdef PRINT_ENABLE_SERIAL
+    Serial.print(">Kp_term_L:");
+    Serial.println(Kp_left * Perror / Ko);
+
+    Serial.print(">Kd_term_L:");
+    Serial.println(- Kd * (input - p->PrevInput) / Ko);
+
+    Serial.print(">ITerm_L:");
+    Serial.println(static_cast<int>(p->ITerm) / Ko);
+    #endif
   }
   else
   {
-    output_temp = (Kp * Perror - Kd * (input - p->PrevInput) + static_cast<int>(p->ITerm));
+    output_temp = (Kp_right * Perror - Kd * (input - p->PrevInput) + static_cast<int>(p->ITerm));
+    #ifdef PRINT_ENABLE_SERIAL
+    Serial.print(">Kp_term_R:");
+    Serial.println(Kp_right * Perror / Ko);
+
+    Serial.print(">Kd_term_R:");
+    Serial.println(- Kd * (input - p->PrevInput) / Ko);
+
+    Serial.print(">ITerm_R:");
+    Serial.println(static_cast<int>(p->ITerm)/ Ko);
+    #endif
   }
 
   // Serial.print(output_temp);
