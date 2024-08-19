@@ -37,6 +37,8 @@ bool SerialInterfaceLinux::Open(std::string &port_name, uint32_t com_baudrate) {
   int flags = (O_RDWR | O_NOCTTY | O_NONBLOCK);
 
   com_handle_ = open(port_name.c_str(), flags);
+  LD_LOG_INFO("Trying to open %s", port_name.c_str());
+
   if (-1 == com_handle_) {
     LD_LOG_ERROR("Open open error,%s", strerror(errno));
     return false;

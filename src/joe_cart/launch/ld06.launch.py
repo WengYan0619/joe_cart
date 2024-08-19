@@ -1,11 +1,14 @@
-#!/usr/bin/env python3
 from launch import LaunchDescription
 from launch_ros.actions import Node
+from launch.actions import DeclareLaunchArgument
+from launch.substitutions import LaunchConfiguration
+
+#!/usr/bin/env python3
 
 '''
 Parameter Description:
 ---
-- Set laser scan directon: 
+- Set laser scan direction: 
   1. Set counterclockwise, example: {'laser_scan_dir': True}
   2. Set clockwise,        example: {'laser_scan_dir': False}
 - Angle crop setting, Mask data within the set angle range:
@@ -13,15 +16,22 @@ Parameter Description:
     1.1. enable angle crop,  example: {'enable_angle_crop_func': True}
     1.2. disable angle crop, example: {'enable_angle_crop_func': False}
   2. Angle cropping interval setting:
-  - The distance and intensity data within the set /home/yan/dev_ws/new_map.yamlangle range will be set to 0.
-  - angle >= 'angle_crop_min' and angle <= 'angle_crop_max' which is [angle_crop_min, angle_crop_max], unit is degress.
+  - The distance and intensity data within the set angle range will be set to 0.
+  - angle >= 'angle_crop_min' and angle <= 'angle_crop_max' which is [angle_crop_min, angle_crop_max], unit is degrees.
     example:
       {'angle_crop_min': 135.0}
       {'angle_crop_max': 225.0}
-      which is [135.0, 225.0], angle unit is degress.
+      which is [135.0, 225.0], angle unit is degrees.
 '''
 
 def generate_launch_description():
+  # Declare lidar_port launch argument
+  lidar_port_arg = DeclareLaunchArgument(
+    'lidar_port',
+    default_value='/dev/ttyACM1',
+    description='The port name for the LiDAR'
+  )
+
   # LDROBOT LiDAR publisher node
   ldlidar_node = Node(
       package='ldlidar_stl_ros2',
@@ -32,7 +42,7 @@ def generate_launch_description():
         {'product_name': 'LDLiDAR_LD06'},
         {'topic_name': 'scan'},
         {'frame_id': 'base_laser'},
-        {'port_name': '/dev/ttyACM1'},
+        {'port_name': LaunchConfiguration('lidar_port')},  # Assign lidar_port launch argument to port_name
         {'port_baudrate': 230400},
         {'laser_scan_dir': True},
         {'enable_angle_crop_func': True},
@@ -49,10 +59,10 @@ def generate_launch_description():
     arguments=['0','0','0.18','0','0','0','base_link','base_laser']
   )
 
-
   # Define LaunchDescription variable
   ld = LaunchDescription()
 
+  ld.add_action(lidar_port_arg)  # Add lidar_port launch argument
   ld.add_action(ldlidar_node)
   ld.add_action(base_link_to_laser_tf_node)
 
