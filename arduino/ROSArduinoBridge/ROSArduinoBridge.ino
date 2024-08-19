@@ -45,6 +45,8 @@
  *  POSSIBILITY OF SUCH DAMAGE.
  *********************************************************************/
 
+#define USE_CURRENT_SENSOR // Enable current sensor code
+
 #define USE_BASE      // Enable the base controller code
 //#undef USE_BASE     // Disable the base controller code
 
@@ -81,6 +83,9 @@
 #else
 #include "WProgram.h"
 #endif
+
+/* Include the current sensor header file */
+#include current_sensor.h
 
 /* Include definition of serial commands */
 #include "commands.h"
@@ -302,6 +307,12 @@ void setup() {
           servoInitPosition[i]);
     }
   #endif
+
+  // Initialize the current sensor
+  #ifdef USE_CURRENT_SENSOR
+    pinMode(LEFT_CURRENT_SENSOR_PIN, INPUT);
+    pinMode(RIGHT_CURRENT_SENSOR_PIN, INPUT);
+  #endif
 }
 
 /* Enter the main loop.  Read and parse input from the serial port
@@ -370,5 +381,12 @@ void loop() {
     servos[i].doSweep();
   }
 #endif
+
+#ifdef USE_CURRENT_SENSOR
+  if (isCurrentExceeded()) {
+    stopMotors();
+    moving = 0;
+    delay(3000);
+  }
 }
 

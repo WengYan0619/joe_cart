@@ -98,3 +98,7 @@
 #endif
 
 #endif
+
+void stopMotors() {
+  setMotorSpeeds(0, 0);
+}
