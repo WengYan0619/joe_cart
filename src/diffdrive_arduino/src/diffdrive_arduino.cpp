@@ -138,8 +138,8 @@ hardware_interface::return_type DiffDriveArduino::write(
   double l_wheel_cmd_to_arduino = l_wheel_.cmd / l_wheel_.rads_per_count / cfg_.loop_rate;
   double r_wheel_cmd_to_arduino = r_wheel_.cmd / r_wheel_.rads_per_count / cfg_.loop_rate;
 
-  l_wheel_cmd_to_arduino > 105 ? 105 : l_wheel_cmd_to_arduino;
-  r_wheel_cmd_to_arduino > 105 ? 105 : r_wheel_cmd_to_arduino;
+  l_wheel_cmd_to_arduino > 80 ? 80 : l_wheel_cmd_to_arduino;
+  r_wheel_cmd_to_arduino > 80 ? 80 : r_wheel_cmd_to_arduino;
 
   // Log the command values
   if (l_wheel_cmd_to_arduino != 0 || r_wheel_cmd_to_arduino != 0) {
