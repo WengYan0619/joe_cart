@@ -59,7 +59,8 @@ add_executable(${PROJECT_NAME}_node
   ${LDLIDAR_DRI_SERIAL}
 )
 ament_target_dependencies(${PROJECT_NAME}_node rclcpp sensor_msgs)
-target_link_libraries(${PROJECT_NAME}_node pthread)
+find_package(Threads REQUIRED)
+target_link_libraries(${PROJECT_NAME}_node ${CMAKE_THREAD_LIBS_INIT})
 
 # Install
 install(TARGETS ${PROJECT_NAME}_node
